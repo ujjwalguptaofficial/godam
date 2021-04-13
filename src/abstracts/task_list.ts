@@ -1,3 +1,5 @@
+import { GODAM_STATE } from "../type";
+
 interface ITaskList {
     state;
     commit;
@@ -6,7 +8,7 @@ interface ITaskList {
 }
 
 export class TaskList implements ITaskList {
-    state: (name: string, moduleName: string) => any;
+    state: GODAM_STATE;
     commit: (name: string, payload: string, moduleName: string) => void;
     derive: (name: string, moduleName: string) => any;
     do: (name: string, payload: string, moduleName: string) => any;

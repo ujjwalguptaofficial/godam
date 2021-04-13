@@ -1,5 +1,6 @@
 export type STORE_MODULE = { [key: string]: Godam }
 import { MutationList, TaskList, DerivedList } from "./abstracts";
+import { Observer, EventBus } from "./helpers";
 
 export interface IStore {
     state;
@@ -9,11 +10,13 @@ export interface IStore {
 }
 
 export class Godam {
-    __state__;
-    __mutation__: MutationList;
-    __derived__;
-    __task__: TaskList;
-    __module__: STORE_MODULE;
+    private __state__: { [key: string]: any };
+    private __mutation__: MutationList;
+    private __derived__;
+    private __task__: TaskList;
+    private __module__: STORE_MODULE;
+    private __ob__: Observer;
+    private __watchBus__ = new EventBus(this);
 
     constructor(store: IStore, module?: STORE_MODULE) {
         this.__state__ = store.state;
@@ -24,7 +27,7 @@ export class Godam {
             };
         }
         this.__mutation__ = mutations;
-        this.__derived__ = new store.derivedList(this.__state__);
+        this.__derived__ = new store.derivedList(this.state);
         this.__module__ = module;
 
         this.__task__ = new store.tasks({
@@ -34,6 +37,8 @@ export class Godam {
             do: this.do
         });
 
+        this.__ob__ = new Observer(this.__onChange__.bind(this));
+        this.__ob__.create(this.__state__);
     }
 
     do(name: string, payload: string, moduleName: string) {
@@ -81,12 +86,27 @@ export class Godam {
         let derived;
         if (moduleName) {
             const module = this.__module__[moduleName];
-            derived = module && module.__state__[name];
+            derived = module && module.__derived__[name];
         }
         else {
-            derived = this.__state__[name];
+            derived = this.__derived__[name];
         }
         if (!derived) return console.error(`No state exist with name ${name} ${moduleName ? "" : "& module " + moduleName}`);
         return derived(name);
+    }
+
+    __onChange__(key, newValue, oldValue) {
+        this['__watchBus__'].emit(key, newValue, oldValue);
+    }
+
+
+    watch(propName: string, cb: (newValue, oldValue) => void) {
+        this.__watchBus__.on(propName, cb);
+        return this;
+    }
+
+    unwatch(propName: string, cb?: (newValue, oldValue) => void) {
+        this.__watchBus__.off(propName, cb);
+        return this;
     }
 }
