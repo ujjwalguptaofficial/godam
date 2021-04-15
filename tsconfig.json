@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "allowJs": true,
+        "noImplicitAny": false,
+        "noEmitOnError": true,
+        "removeComments": false,
+        "sourceMap": true,
+        "inlineSources": true,
+        "moduleResolution": "node",
+        "target": "es5",
+        "preserveConstEnums": true,
+        "declaration": true,
+        "declarationDir": "./dist/ts",
+        "allowSyntheticDefaultImports": true,
+        "module": "es6",
+        "lib": [
+            "es2015",
+            "dom"
+        ]
+    },
+    "include": ["src/*"]
+}

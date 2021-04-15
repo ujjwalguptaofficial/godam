@@ -1,1 +1,1 @@
-export type GODAM_STATE = (name: string, moduleName: string) => any;
+export type GODAM_STATE = (name: string, moduleName?: string) => any;

@@ -1,47 +1,58 @@
-export type STORE_MODULE = { [key: string]: Godam }
-import { MutationList, TaskList, DerivedList } from "./abstracts";
+export type STORE_MODULE = { [key: string]: Godam<any> }
+import { Mutations, Tasks, DerivedList } from "./abstracts";
 import { Observer, EventBus } from "./helpers";
 
 export interface IStore {
     state;
-    mutations: typeof MutationList;
-    derivedList: typeof DerivedList;
-    tasks: typeof TaskList;
+    mutations?: typeof Mutations | any;
+    derivedList?: typeof DerivedList | any;
+    tasks?: typeof Tasks;
 }
 
-export class Godam {
+export class Godam<T_STATE = void> {
+    STATE: T_STATE;
     private __state__: { [key: string]: any };
-    private __mutation__: MutationList;
+    private __mutation__: Mutations;
     private __derived__;
-    private __task__: TaskList;
+    private __task__: Tasks;
     private __module__: STORE_MODULE;
     private __ob__: Observer;
     private __watchBus__ = new EventBus(this);
 
     constructor(store: IStore, module?: STORE_MODULE) {
-        this.__state__ = store.state;
-        const mutations = new store.mutations(this.__state__);
-        for (const key in this.__state__) {
-            mutations["set" + key] = function (payload) {
-                this.state[key] = payload;
-            };
-        }
-        this.__mutation__ = mutations;
-        this.__derived__ = new store.derivedList(this.state);
-        this.__module__ = module;
 
-        this.__task__ = new store.tasks({
+        this.__state__ = typeof store.state === 'function' ? new store.state() : store.state;
+
+        let mutations = store.mutations;
+        mutations = mutations ? new store.mutations(this.__state__) : {} as any;
+        for (const key in this.__state__) {
+            const name = "set" + key;
+            if (!mutations[name]) {
+                mutations[name] = function (payload) {
+                    this.state[key] = payload;
+                };
+            }
+        }
+        this.__mutation__ = mutations as any;
+        const derived = store.derivedList;
+        this.__derived__ = derived ?
+            new store.derivedList(this.state) : {};
+        this.__module__ = module;
+        const task = store.tasks;
+        this.__task__ = task ? new store.tasks({
             state: this.state,
             commit: this.commit,
             derive: this.derive,
             do: this.do
-        });
+        }) : {} as any;
 
         this.__ob__ = new Observer(this.__onChange__.bind(this));
         this.__ob__.create(this.__state__);
+
+        this.STATE = this.__state__ as any;
     }
 
-    do(name: string, payload: string, moduleName: string) {
+    do(name: string, payload?: string, moduleName?: string) {
         let task;
         if (moduleName) {
             const module = this.__module__[moduleName];
@@ -55,7 +66,7 @@ export class Godam {
         return task(payload);
     }
 
-    commit(name: string, payload: string, moduleName: string) {
+    commit(name: string, payload: string, moduleName?: string) {
         let mutation;
         if (moduleName) {
             const module = this.__module__[moduleName];
@@ -69,7 +80,7 @@ export class Godam {
         mutation(payload);
     }
 
-    state(name: string, moduleName: string) {
+    state(name: string, moduleName?: string) {
         let state;
         if (moduleName) {
             const module = this.__module__[moduleName];
@@ -82,7 +93,7 @@ export class Godam {
         return state;
     }
 
-    derive(name: string, moduleName: string) {
+    derive(name: string, moduleName?: string) {
         let derived;
         if (moduleName) {
             const module = this.__module__[moduleName];
@@ -95,7 +106,7 @@ export class Godam {
         return derived(name);
     }
 
-    __onChange__(key, newValue, oldValue) {
+    private __onChange__(key, newValue, oldValue) {
         this['__watchBus__'].emit(key, newValue, oldValue);
     }
 

@@ -7,11 +7,15 @@ interface ITaskList {
     do;
 }
 
-export class TaskList implements ITaskList {
+export class Tasks<T_STATE = void, T_MUTATION = void, T_TASK = void> implements ITaskList {
+    STATE: T_STATE
+    MUTATION: T_MUTATION
+    TASK: T_TASK
+
     state: GODAM_STATE;
     commit: (name: string, payload: string, moduleName: string) => void;
     derive: (name: string, moduleName: string) => any;
-    do: (name: string, payload: string, moduleName: string) => any;
+    do: (name: string, payload?: string, moduleName?: string) => any;
 
     constructor(value: ITaskList) {
         this.state = value.state;
