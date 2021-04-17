@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "cross-env NODE_ENV=test karma start karma.conf.js",
-    "install:lib": "npm i ../godam-0.1.0.tgz"
+    "install:lib": "npm un godam && npm i ../godam-0.1.0.tgz"
   },
   "author": "",
   "license": "ISC",

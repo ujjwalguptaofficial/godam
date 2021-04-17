@@ -1,4 +1,4 @@
-export type STORE_MODULE = { [key: string]: Godam<any> }
+export type STORE_MODULE = { [key: string]: Godam }
 import { Mutations, Tasks, DerivedList } from "./abstracts";
 import { Observer, EventBus } from "./helpers";
 
@@ -10,7 +10,7 @@ export interface IStore {
 }
 
 export class Godam<T_STATE = void> {
-    STATE: T_STATE;
+    STATE: { [P in keyof T_STATE]-?: P };
     private __state__: { [key: string]: any };
     private __mutation__: Mutations;
     private __derived__;
@@ -48,8 +48,11 @@ export class Godam<T_STATE = void> {
 
         this.__ob__ = new Observer(this.__onChange__.bind(this));
         this.__ob__.create(this.__state__);
-
-        this.STATE = this.__state__ as any;
+        const keys = {};
+        Object.keys(this.__state__ as any).forEach(key => {
+            keys[key] = key;
+        });
+        this.STATE = keys as any;
     }
 
     do(name: string, payload?: string, moduleName?: string) {
@@ -89,7 +92,7 @@ export class Godam<T_STATE = void> {
         else {
             state = this.__state__[name];
         }
-        if (!state) return console.error(`No state exist with name ${name} ${moduleName ? "" : "& module " + moduleName}`);
+        if (state === undefined) return console.error(`No state exist with name ${name} ${moduleName ? "" : "& module " + moduleName}`);
         return state;
     }
 
