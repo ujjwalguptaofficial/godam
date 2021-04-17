@@ -1,4 +1,4 @@
-export type STORE_MODULE = { [key: string]: Godam }
+export type STORE_MODULE<T> = { [P in keyof T]-?: T[P]; }
 import { Mutations, Tasks, DerivedList } from "./abstracts";
 import { Observer, EventBus } from "./helpers";
 
@@ -9,17 +9,18 @@ export interface IStore {
     tasks?: typeof Tasks;
 }
 
-export class Godam<T_STATE = void> {
+export class Godam<T_STATE = void, T_MUTATION = void, T_DERIVED = void, T_TASK = void, T_MODULE = void> {
     STATE: { [P in keyof T_STATE]-?: P };
+    MUTATION: { [P in keyof T_MUTATION]-?: P };
     private __state__: { [key: string]: any };
     private __mutation__: Mutations;
     private __derived__;
     private __task__: Tasks;
-    private __module__: STORE_MODULE;
+    module: STORE_MODULE<T_MODULE>;
     private __ob__: Observer;
     private __watchBus__ = new EventBus(this);
 
-    constructor(store: IStore, module?: STORE_MODULE) {
+    constructor(store: IStore, modules?: { [key: string]: any }) {
 
         this.__state__ = typeof store.state === 'function' ? new store.state() : store.state;
 
@@ -37,7 +38,7 @@ export class Godam<T_STATE = void> {
         const derived = store.derivedList;
         this.__derived__ = derived ?
             new store.derivedList(this.state) : {};
-        this.__module__ = module;
+        this.module = modules as any || {};
         const task = store.tasks;
         this.__task__ = task ? new store.tasks({
             state: this.state,
@@ -58,7 +59,7 @@ export class Godam<T_STATE = void> {
     do(name: string, payload?: string, moduleName?: string) {
         let task;
         if (moduleName) {
-            const module = this.__module__[moduleName];
+            const module = this.module[moduleName];
             task = module && module.__task__[name];
         }
         else {
@@ -72,7 +73,7 @@ export class Godam<T_STATE = void> {
     commit(name: string, payload: string, moduleName?: string) {
         let mutation;
         if (moduleName) {
-            const module = this.__module__[moduleName];
+            const module = this.module[moduleName];
             mutation = module && module.__mutation__[name];
         }
         else {
@@ -86,7 +87,7 @@ export class Godam<T_STATE = void> {
     state(name: string, moduleName?: string) {
         let state;
         if (moduleName) {
-            const module = this.__module__[moduleName];
+            const module = this.module[moduleName];
             state = module && module.__state__[name];
         }
         else {
@@ -99,7 +100,7 @@ export class Godam<T_STATE = void> {
     derive(name: string, moduleName?: string) {
         let derived;
         if (moduleName) {
-            const module = this.__module__[moduleName];
+            const module = this.module[moduleName];
             derived = module && module.__derived__[name];
         }
         else {
