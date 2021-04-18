@@ -1,4 +1,4 @@
-import { RootState, RootMutation } from "./root";
+import { RootState, RootMutation, RootTask } from "./root";
 import { Godam } from "godam";
 import profileStore from "./profile";
 import Account from "./account";
@@ -10,7 +10,8 @@ class moduleVal {
 
 export const store = new Godam<RootState, RootMutation>({
     state: RootState,
-    mutations: RootMutation
+    mutations: RootMutation,
+    tasks: RootTask
 },
     moduleVal
 )

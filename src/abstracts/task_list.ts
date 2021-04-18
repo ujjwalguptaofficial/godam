@@ -7,20 +7,15 @@ interface ITaskList {
     do;
 }
 
-export class Tasks<T_STATE = void, T_MUTATION = void, T_TASK = void> implements ITaskList {
-    STATE: T_STATE
-    MUTATION: T_MUTATION
-    TASK: T_TASK
+export class Tasks<T_STATE = void, T_MUTATION = void, T_DERIVED = {}, T_TASK = void> implements ITaskList {
+    STATE: { [P in keyof T_STATE]-?: P };
+    MUTATION: { [P in keyof T_MUTATION]-?: P };
+    DERIVED: { [P in keyof T_DERIVED]-?: P };
 
     state: GODAM_STATE;
-    commit: (name: string, payload: string, moduleName: string) => void;
-    derive: (name: string, moduleName: string) => any;
-    do: (name: string, payload?: string, moduleName?: string) => any;
+    commit: (name: string, payload: any, moduleName?: string) => void;
+    derive: (name: string, moduleName?: string) => any;
+    do: (name: string, payload?: any, moduleName?: string) => any;
 
-    constructor(value: ITaskList) {
-        this.state = value.state;
-        this.commit = value.commit;
-        this.derive = value.derive;
-        this.do = value.do;
-    }
+
 }

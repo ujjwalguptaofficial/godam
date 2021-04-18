@@ -5,7 +5,7 @@ export interface IStore {
     state;
     mutations?: typeof Mutations | any;
     derivedList?: typeof DerivedList | any;
-    tasks?: typeof Tasks;
+    tasks?: typeof Tasks | any;
 }
 
 export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T_MODULE = {}> {
@@ -37,14 +37,14 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
         modules = modules as any || {};
         this.module = typeof modules === "function" ? new (modules as any)() : modules;
 
-        const task = store.tasks;
-        this.__task__ = task ? new store.tasks({
+        const task = store.tasks || {};
+        this.__task__ = typeof task === "function" ? new task() : task as any;
+        Object.assign(task, {
             state: this.state,
             commit: this.commit,
             derive: this.derive,
             do: this.do
-        }) : {} as any;
-
+        })
         this.__ob__ = new Observer(this.__onChange__.bind(this));
         this.__ob__.create(this.__state__);
         const stateKeys = {};
@@ -61,56 +61,42 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
     }
 
     do(name: string, payload?: any, moduleName?: string) {
-        let task;
-        if (moduleName) {
-            const module = this.module[moduleName];
-            task = module && module.__task__[name];
-        }
-        else {
-            task = this.__task__[name];
-        }
-
+        const ctx = this.__getCtx__("__task__", moduleName);
+        const task = ctx[name]
         if (!task) return console.error(`No task exist with name ${name} ${moduleName ? "" : "& module " + moduleName}`);
         return task(payload);
     }
 
-    commit(name: string, payload: any, moduleName?: string) {
-        let mutation;
+    __getCtx__(prop: string, moduleName: string) {
         let ctx;
         if (moduleName) {
             const module = this.module[moduleName];
-            ctx = module && module.__mutation__;
+            ctx = module && module[prop];
         }
         else {
-            ctx = this.__mutation__;
+            ctx = this[prop];
         }
-        mutation = ctx[name]
+        return ctx;
+    }
+
+    commit(name: string, payload: any, moduleName?: string) {
+        const ctx = this.__getCtx__("__mutation__", moduleName);
+        const mutation = ctx[name]
         if (!mutation) return console.error(`No mutation exist with name ${name} ${moduleName ? "" : "& module " + moduleName}`);
         mutation.call(ctx, payload);
     }
 
     state(name: string, moduleName?: string) {
-        let state;
-        if (moduleName) {
-            const module = this.module[moduleName];
-            state = module && module.__state__[name];
-        }
-        else {
-            state = this.__state__[name];
-        }
+        const ctx = this.__getCtx__("__state__", moduleName);
+        const state = ctx[name]
         if (state === undefined) return console.error(`No state exist with name ${name} ${moduleName ? "" : "& module " + moduleName}`);
         return state;
     }
 
     derive(name: string, moduleName?: string) {
-        let derived;
-        if (moduleName) {
-            const module = this.module[moduleName];
-            derived = module && module.__derived__[name];
-        }
-        else {
-            derived = this.__derived__[name];
-        }
+        const ctx = this.__getCtx__("__derived__", moduleName);
+        const derived = ctx[name]
+        if (derived === undefined) return console.error(`No state exist with name ${name} ${moduleName ? "" : "& module " + moduleName}`);
         if (!derived) return console.error(`No state exist with name ${name} ${moduleName ? "" : "& module " + moduleName}`);
         return derived(name);
     }
