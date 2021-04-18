@@ -1,4 +1,3 @@
-export type STORE_MODULE<T> = { [P in keyof T]-?: T[P]; }
 import { Mutations, Tasks, DerivedList } from "./abstracts";
 import { Observer, EventBus } from "./helpers";
 
@@ -9,14 +8,16 @@ export interface IStore {
     tasks?: typeof Tasks;
 }
 
-export class Godam<T_STATE = void, T_MUTATION = void, T_DERIVED = void, T_TASK = void, T_MODULE = void> {
+export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T_MODULE = {}> {
     STATE: { [P in keyof T_STATE]-?: P };
     MUTATION: { [P in keyof T_MUTATION]-?: P };
+    DERIVED: { [P in keyof T_DERIVED]-?: P };
+    TASK: { [P in keyof T_TASK]-?: P };
     private __state__: { [key: string]: any };
     private __mutation__: Mutations;
     private __derived__;
     private __task__: Tasks;
-    module: STORE_MODULE<T_MODULE>;
+    module: { [P in keyof T_MODULE]-?: T_MODULE[P]; };
     private __ob__: Observer;
     private __watchBus__ = new EventBus(this);
 
