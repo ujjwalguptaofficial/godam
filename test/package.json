@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "cross-env NODE_ENV=test karma start karma.conf.js",
-    "install:lib": "npm un godam && npm i ../godam-0.1.0.tgz"
+    "install:test": "npm run install:lib && npm run test",
+    "install:lib": "npm i ../godam-0.1.0.tgz --no-save"
   },
   "author": "",
   "license": "ISC",
@@ -23,7 +24,5 @@
     "mocha": "^8.3.2",
     "puppeteer": "^5.5.0"
   },
-  "dependencies": {
-    "godam": "file:../godam-0.1.0.tgz"
-  }
+  "dependencies": {}
 }

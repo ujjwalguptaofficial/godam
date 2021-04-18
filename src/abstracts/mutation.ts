@@ -1,7 +1,3 @@
-export class Mutations<T_STATE = void> {
-    state: T_STATE;
-
-    constructor(state) {
-        this.state = state;
-    }
+export class Mutations<T_STATE = {}> {
+    state: T_STATE = {} as any;
 }

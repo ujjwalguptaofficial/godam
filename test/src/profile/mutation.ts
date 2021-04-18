@@ -5,4 +5,7 @@ export class ProfileMutation extends Mutations<typeof profile> {
     setFirstName(value) {
         this.state.firstName = value;
     }
+    setLastName(value) {
+        this.state.lastName = value;
+    }
 }

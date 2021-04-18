@@ -26,20 +26,17 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
         this.__state__ = typeof store.state === 'function' ? new store.state() : store.state;
 
         let mutations = store.mutations;
-        mutations = mutations ? new store.mutations(this.__state__) : {} as any;
-        for (const key in this.__state__) {
-            const name = "set" + key;
-            if (!mutations[name]) {
-                mutations[name] = function (payload) {
-                    this.state[key] = payload;
-                };
-            }
-        }
+        mutations = mutations ? new store.mutations() : {} as any;
+        mutations.state = this.__state__;
         this.__mutation__ = mutations as any;
+
         const derived = store.derivedList;
         this.__derived__ = derived ?
             new store.derivedList(this.state) : {};
-        this.module = modules as any || {};
+
+        modules = modules as any || {};
+        this.module = typeof modules === "function" ? new (modules as any)() : modules;
+
         const task = store.tasks;
         this.__task__ = task ? new store.tasks({
             state: this.state,
@@ -50,14 +47,20 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
 
         this.__ob__ = new Observer(this.__onChange__.bind(this));
         this.__ob__.create(this.__state__);
-        const keys = {};
-        Object.keys(this.__state__ as any).forEach(key => {
-            keys[key] = key;
-        });
-        this.STATE = keys as any;
+        const stateKeys = {};
+        for (const key in this.__state__) {
+            stateKeys[key] = key;
+        };
+        this.STATE = stateKeys as any;
+
+        const mutationKeys = {};
+        for (const key in this.__mutation__) {
+            mutationKeys[key] = key;
+        }
+        this.MUTATION = mutationKeys as any;
     }
 
-    do(name: string, payload?: string, moduleName?: string) {
+    do(name: string, payload?: any, moduleName?: string) {
         let task;
         if (moduleName) {
             const module = this.module[moduleName];
@@ -71,18 +74,19 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
         return task(payload);
     }
 
-    commit(name: string, payload: string, moduleName?: string) {
+    commit(name: string, payload: any, moduleName?: string) {
         let mutation;
+        let ctx;
         if (moduleName) {
             const module = this.module[moduleName];
-            mutation = module && module.__mutation__[name];
+            ctx = module && module.__mutation__;
         }
         else {
-            mutation = this.__mutation__[name];
+            ctx = this.__mutation__;
         }
-
+        mutation = ctx[name]
         if (!mutation) return console.error(`No mutation exist with name ${name} ${moduleName ? "" : "& module " + moduleName}`);
-        mutation(payload);
+        mutation.call(ctx, payload);
     }
 
     state(name: string, moduleName?: string) {

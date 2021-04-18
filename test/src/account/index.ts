@@ -1,9 +1,15 @@
-import { Godam } from "godam";
+import { Godam, Mutations } from "godam";
 
 class AccountState {
-    id: string;
+    id: string = ""
+}
+class AccountMutation extends Mutations<AccountState> {
+    setId(value) {
+        this.state.id = value;
+    }
 }
 
 export default new Godam<AccountState>({
-    state: AccountState
+    state: AccountState,
+    mutations: AccountMutation
 })

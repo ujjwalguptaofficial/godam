@@ -9,7 +9,9 @@
     "build:pack": "npm run build && npm pack",
     "webpack:dev": "webpack --config webpack/webpack.dev.config.js",
     "webpack:prod": "webpack --config webpack/webpack.prod.config.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "cd test && npm run test",
+    "build:test": "npm run build:pack && npm run install:test",
+    "install:test": "cd test && npm run install:test"
   },
   "repository": {
     "type": "git",
