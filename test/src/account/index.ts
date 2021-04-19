@@ -1,4 +1,4 @@
-import { Godam, Mutations } from "godam";
+import { Godam, Mutations, Room } from "godam";
 
 class AccountState {
     id: string = ""
@@ -9,7 +9,7 @@ class AccountMutation extends Mutations<AccountState> {
     }
 }
 
-export default new Godam<AccountState>({
+export default new Room({
     state: AccountState,
     mutations: AccountMutation
 })

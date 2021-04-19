@@ -1,5 +1,5 @@
-import { Mutations, Tasks, DerivedList } from "./abstracts";
-import { Observer, EventBus } from "./helpers";
+import { Mutations, Tasks, DerivedList, Room } from "./abstracts";
+import { Observer, EventBus, initRoom } from "./helpers";
 import { IGodamRoom } from "./interfaces";
 
 export interface IStore {
@@ -28,54 +28,24 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
     private __mutation__: Mutations;
     private __derived__;
     private __task__: Tasks;
-    module: { [P in keyof T_MODULE]-?: T_MODULE[P]; };
     private __ob__: Observer;
-    private __watchBus__ = new EventBus(this);
+    private __watchBus__: EventBus;
 
-    constructor(store: IStore, modules?: { [key: string]: any }) {
-        this.__state__ = typeof store.state === 'function' ? new store.state() : store.state;
+    rooms: { [P in keyof T_MODULE]-?: T_MODULE[P]; };
 
-        const stateKeys = {};
-        for (const key in this.__state__) {
-            stateKeys[key] = key;
-        };
-        this.STATE = stateKeys as any;
+    constructor(store: IStore, rooms?: { [key: string]: Room }) {
 
-        let mutations = store.mutations;
-        mutations = mutations ? new store.mutations() : {} as any;
-        mutations.state = this.__state__;
-        this.__mutation__ = mutations as any;
+        initRoom.call(this, store, true);
 
-        const mutationKeys = {};
-        for (const key in this.__mutation__) {
-            mutationKeys[key] = key;
+        rooms = rooms as any || {};
+        rooms = typeof rooms === "function" ? new (rooms as any)() : rooms;
+
+        for (const key in rooms) {
+            const room = rooms[key];
+            room['__prefix__'] = key;
+            room['__store__'] = this;
         }
-        this.MUTATION = mutationKeys as any;
-
-        const derived = store.derivedList;
-        this.__derived__ = derived ?
-            new store.derivedList(this.get) : {};
-
-        modules = modules as any || {};
-        this.module = typeof modules === "function" ? new (modules as any)() : modules;
-
-        const task = store.tasks || {};
-        this.__task__ = typeof task === "function" ? new task() : task as any;
-
-        Object.assign(this.__task__, {
-            get: this.get.bind(this),
-            commit: this.commit.bind(this),
-            derive: this.derive,
-            do: this.do,
-            STATE: this.STATE,
-            MUTATION: this.MUTATION
-        })
-
-
-        if (store.track !== false) {
-            this.__ob__ = new Observer(this.__onChange__.bind(this));
-            this.__ob__.create(this.__state__);
-        }
+        this.rooms = rooms as any;
     }
 
     do(taskName: string, payload?: any) {
@@ -89,7 +59,7 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
     __getCtx__(prop: string, moduleName: string) {
         let ctx;
         if (moduleName) {
-            const module = this.module[moduleName];
+            const module = this.rooms[moduleName];
             ctx = module && module[prop];
         }
         else {
