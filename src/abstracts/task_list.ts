@@ -1,7 +1,7 @@
 import { GODAM_STATE } from "../type";
 
 interface ITaskList {
-    state;
+    get;
     commit;
     derive;
     do;
@@ -12,7 +12,7 @@ export class Tasks<T_STATE = void, T_MUTATION = void, T_DERIVED = {}, T_TASK = v
     MUTATION: { [P in keyof T_MUTATION]-?: P };
     DERIVED: { [P in keyof T_DERIVED]-?: P };
 
-    state: GODAM_STATE;
+    get: GODAM_STATE;
     commit: (name: string, payload: any, moduleName?: string) => void;
     derive: (name: string, moduleName?: string) => any;
     do: (name: string, payload?: any, moduleName?: string) => any;

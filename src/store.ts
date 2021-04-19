@@ -1,9 +1,9 @@
-import { Mutations, Tasks, DerivedList, State } from "./abstracts";
+import { Mutations, Tasks, DerivedList } from "./abstracts";
 import { Observer, EventBus } from "./helpers";
-import { Module } from "module";
+import { IGodamRoom } from "./interfaces";
 
 export interface IStore {
-    state: typeof State | any;
+    state: any;
     mutations?: typeof Mutations | any;
     derivedList?: typeof DerivedList | any;
     tasks?: typeof Tasks | any;
@@ -19,7 +19,7 @@ const getNameAndModule = (name: string) => {
     }
 }
 
-export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T_MODULE = {}> {
+export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T_MODULE = {}> implements IGodamRoom {
     STATE: { [P in keyof T_STATE]-?: P };
     MUTATION: { [P in keyof T_MUTATION]-?: P };
     DERIVED: { [P in keyof T_DERIVED]-?: P };
@@ -54,7 +54,7 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
 
         const derived = store.derivedList;
         this.__derived__ = derived ?
-            new store.derivedList(this.state) : {};
+            new store.derivedList(this.get) : {};
 
         modules = modules as any || {};
         this.module = typeof modules === "function" ? new (modules as any)() : modules;
@@ -63,7 +63,7 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
         this.__task__ = typeof task === "function" ? new task() : task as any;
 
         Object.assign(this.__task__, {
-            state: this.state.bind(this),
+            get: this.get.bind(this),
             commit: this.commit.bind(this),
             derive: this.derive,
             do: this.do,
@@ -106,7 +106,7 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
         mutation.call(ctx, payload);
     }
 
-    state(name: string, moduleName?: string) {
+    get(name: string, moduleName?: string) {
         if (!moduleName) {
             const result = getNameAndModule(name);
             name = result.name;

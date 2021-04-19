@@ -4,25 +4,25 @@ import { expect } from "chai";
 describe("State value", () => {
     it("commit in root state", () => {
         store.commit(store.MUTATION.setIsAuthenticated, true);
-        expect(store.state(store.STATE.isAuthenticated)).equal(true);
+        expect(store.get(store.STATE.isAuthenticated)).equal(true);
 
         store.commit(store.MUTATION.setIsConfigLoaded, true);
-        expect(store.state(store.STATE.isConfigLoaded)).equal(true);
+        expect(store.get(store.STATE.isConfigLoaded)).equal(true);
     })
 
     it("commit in moduled state", () => {
         store.commit("setId@account", 5);
         expect(
-            store.state("id", "account")
+            store.get("id", "account")
         ).equal(5);
 
         store.commit("setFirstName@profile", "ujjwal",);
         expect(
-            store.state("firstName", "profile")
+            store.get("firstName", "profile")
         ).equal("ujjwal");
         store.commit("setLastName@profile", "gupta");
         expect(
-            store.state("lastName", "profile")
+            store.get("lastName", "profile")
         ).equal("gupta");
 
     })
