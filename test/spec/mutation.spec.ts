@@ -11,16 +11,16 @@ describe("State value", () => {
     })
 
     it("commit in moduled state", () => {
-        store.commit("setId", 5, "account");
+        store.commit("setId@account", 5);
         expect(
             store.state("id", "account")
         ).equal(5);
 
-        store.commit("setFirstName", "ujjwal", "profile");
+        store.commit("setFirstName@profile", "ujjwal",);
         expect(
             store.state("firstName", "profile")
         ).equal("ujjwal");
-        store.commit("setLastName", "gupta", "profile");
+        store.commit("setLastName@profile", "gupta");
         expect(
             store.state("lastName", "profile")
         ).equal("gupta");

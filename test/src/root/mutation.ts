@@ -9,4 +9,8 @@ export class RootMutation extends Mutations<RootState> {
     setIsConfigLoaded(value) {
         this.state.isConfigLoaded = value;
     }
+
+    reset() {
+        Object.assign(this.state, new RootState());
+    }
 }
