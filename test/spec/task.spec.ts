@@ -12,7 +12,7 @@ describe("Action value", () => {
     })
 
     it("call getConfig", () => {
-        store.do("getConfig");
+        store.do(store.TASK.getConfig);
         expect(store.get(store.STATE.isAuthenticated)).equal(undefined);
         expect(store.get(store.STATE.isConfigLoaded)).equal(true);
 
@@ -21,5 +21,15 @@ describe("Action value", () => {
         store.commit(store.MUTATION.reset);
         store.do("getConfig", true);
         expect(store.get(store.STATE.isAuthenticated)).equal(true);
+    })
+
+    it("save profile", () => {
+        store.do("saveProfile@profile", {
+            firstName: "BatMan",
+            lastName: "SuperMan"
+        })
+        expect(store.get("firstName@profile")).equal("BatMan");
+        expect(store.get("lastName@profile")).equal("SuperMan");
+        // expect(store.get())
     })
 })

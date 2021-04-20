@@ -13,4 +13,7 @@ export class RootMutation extends Mutations<RootState> {
     reset() {
         Object.assign(this.state, new RootState());
     }
+    saveCache(key) {
+        this.state.cache[key] = true;
+    }
 }

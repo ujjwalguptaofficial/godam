@@ -24,24 +24,25 @@ export class Room<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}> im
         initRoom.call(this, store);
     }
 
-    __getNameWithPrefix__(name: string) {
-        return name + "@" + this.__prefix__;
+    __getNameWithRoom__(name: string) {
+        return name.includes("@") ? name :
+            name + "@" + this.__prefix__;
     }
 
     do(name: string, payload?) {
-        this.__store__.do(this.__getNameWithPrefix__(name), payload);
+        this.__store__.do(this.__getNameWithRoom__(name), payload);
     }
 
     commit(name: string, payload?) {
-        this.__store__.commit(this.__getNameWithPrefix__(name), payload);
+        this.__store__.commit(this.__getNameWithRoom__(name), payload);
     }
 
     get(name: string) {
-        this.__store__.get(name, this.__prefix__);
+        this.__store__.get(this.__getNameWithRoom__(name));
     }
 
     derive(name: string) {
-        this.__store__.derive(this.__getNameWithPrefix__(name));
+        this.__store__.derive(this.__getNameWithRoom__(name));
     }
 
     private __onChange__(key, newValue, oldValue) {

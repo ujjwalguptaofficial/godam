@@ -4,6 +4,7 @@ export class RootState {
     apiServer = "";
     appName = "Godam";
     isConfigLoaded = false;
+    cache = {}
 }
 
 

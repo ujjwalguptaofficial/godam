@@ -30,13 +30,20 @@ export function initRoom(this: Room, store: IStore, isParent?: boolean) {
     const task = store.tasks || {};
     this['__task__'] = typeof task === "function" ? new task() : task as any;
 
+    const taskKeys = {};
+    for (const key in this['__task__']) {
+        taskKeys[key] = key;
+    }
+    this.TASK = taskKeys;
+    
     Object.assign(this['__task__'], {
         get: this.get.bind(this),
         commit: this.commit.bind(this),
         derive: this.derive,
         do: this.do,
         STATE: this.STATE,
-        MUTATION: this.MUTATION
+        MUTATION: this.MUTATION,
+        TASK: taskKeys
     })
 
     if (isParent) {

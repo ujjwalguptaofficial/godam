@@ -58,7 +58,7 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
 
     __getCtx__(prop: string, moduleName: string) {
         let ctx;
-        if (moduleName) {
+        if (moduleName && moduleName !== "root") {
             const module = this.rooms[moduleName];
             ctx = module && module[prop];
         }

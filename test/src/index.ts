@@ -8,7 +8,7 @@ const rooms = {
     account: Account
 }
 
-export const store = new Godam<RootState, RootMutation>({
+export const store = new Godam<RootState, RootMutation, {}, RootTask>({
     state: RootState,
     mutations: RootMutation,
     tasks: RootTask
