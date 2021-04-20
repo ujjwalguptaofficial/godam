@@ -40,6 +40,13 @@ export class EventBus {
         );
     }
 
+    emitSync(event: string, ...args) {
+        const events = this._events[event] || [];
+        return events.map(cb => {
+            return cb.call(this._ctx, ...args);
+        })
+    }
+
     emitLinear(event: string, ...args) {
         const events = this._events[event] || [];
         let index = 0;

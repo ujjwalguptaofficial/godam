@@ -43,7 +43,17 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
         for (const key in rooms) {
             const room = rooms[key];
             room['__prefix__'] = key;
-            room['__store__'] = this;
+            room['__watchBus__'].on("do", (name: string, payload?: any) => {
+                return this.do(name, payload);
+            }).on("commit", (name: string, payload?: any) => {
+                return this.commit(name, payload);
+            }).on("eval", (name: string, payload?: any) => {
+                return this.eval(name, payload);
+            }).on("get", (name, roomName) => {
+                return this.get(name, roomName);
+            }).on("change", (key, newVal, oldValue) => {
+                return this.__onChange__(key, newVal, oldValue);
+            })
         }
         this.rooms = rooms as any;
     }
@@ -56,17 +66,6 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
         return task.call(ctx, payload);
     }
 
-    __getCtx__(prop: string, moduleName: string) {
-        let ctx;
-        if (moduleName && moduleName !== "root") {
-            const module = this.rooms[moduleName];
-            ctx = module && module[prop];
-        }
-        else {
-            ctx = this[prop];
-        }
-        return ctx;
-    }
 
     commit(mutationName: string, payload?: any) {
         let { name, moduleName } = getNameAndModule(mutationName);
@@ -98,11 +97,6 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
         return console.error(`No state exist with name ${name} ${moduleName ? "" : "& module " + moduleName}`);
     }
 
-    private __onChange__(key, newValue, oldValue) {
-        this['__watchBus__'].emit(key, newValue, oldValue);
-    }
-
-
     watch(propName: string, cb: (newValue, oldValue) => void) {
         this.__watchBus__.on(propName, cb);
         return this;
@@ -112,4 +106,21 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
         this.__watchBus__.off(propName, cb);
         return this;
     }
+
+    private __onChange__(key, newValue, oldValue) {
+        this.__watchBus__.emit(key, newValue, oldValue);
+    }
+
+    private __getCtx__(prop: string, moduleName: string) {
+        let ctx;
+        if (moduleName && moduleName !== "root") {
+            const module = this.rooms[moduleName];
+            ctx = module && module[prop];
+        }
+        else {
+            ctx = this[prop];
+        }
+        return ctx;
+    }
+
 }

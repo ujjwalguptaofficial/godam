@@ -61,9 +61,7 @@ export function initRoom(this: Room, store: IStore, isParent?: boolean) {
         EXPRESSION: expressionKeys
     })
 
-    if (isParent) {
-        this['__watchBus__'] = new EventBus(this);
-    }
+    this['__watchBus__'] = new EventBus(this);
 
     if (store.track !== false) {
         this['__ob__'] = new Observer(this['__onChange__'].bind(this));
