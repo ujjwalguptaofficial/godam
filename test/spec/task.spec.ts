@@ -30,6 +30,6 @@ describe("Action value", () => {
         })
         expect(store.get("firstName@profile")).equal("BatMan");
         expect(store.get("lastName@profile")).equal("SuperMan");
-        // expect(store.get())
+        expect(store.eval(store.EXPRESSION.isCached, "save_profile")).equal(true);
     })
 })

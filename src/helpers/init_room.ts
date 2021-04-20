@@ -23,9 +23,23 @@ export function initRoom(this: Room, store: IStore, isParent?: boolean) {
     }
     this.MUTATION = mutationKeys as any;
 
-    const derived = store.derivedList;
-    this['__derived__'] = derived ?
-        new store.derivedList(this.get) : {};
+    let expression = store.expressions || {};
+    expression = typeof expression === "function" ?
+        new store.expressions() : expression;
+    const get = this.get.bind(this);
+
+    Object.assign(expression, {
+        STATE: stateKeys,
+        get: get
+    })
+    this['__expression__'] = expression;
+
+    const expressionKeys = {};
+    for (const key in this['__expression__']) {
+        expressionKeys[key] = key;
+    }
+
+    this.EXPRESSION = expressionKeys;
 
     const task = store.tasks || {};
     this['__task__'] = typeof task === "function" ? new task() : task as any;
@@ -35,15 +49,16 @@ export function initRoom(this: Room, store: IStore, isParent?: boolean) {
         taskKeys[key] = key;
     }
     this.TASK = taskKeys;
-    
+
     Object.assign(this['__task__'], {
-        get: this.get.bind(this),
+        get: get,
         commit: this.commit.bind(this),
-        derive: this.derive,
+        eval: this.eval.bind(this),
         do: this.do,
         STATE: this.STATE,
         MUTATION: this.MUTATION,
-        TASK: taskKeys
+        TASK: taskKeys,
+        EXPRESSION: expressionKeys
     })
 
     if (isParent) {

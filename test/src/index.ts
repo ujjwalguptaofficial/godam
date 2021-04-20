@@ -1,4 +1,4 @@
-import { RootState, RootMutation, RootTask } from "./root";
+import { RootState, RootMutation, RootTask, RootExpression } from "./root";
 import { Godam } from "godam";
 import profileStore from "./profile";
 import Account from "./account";
@@ -8,10 +8,11 @@ const rooms = {
     account: Account
 }
 
-export const store = new Godam<RootState, RootMutation, {}, RootTask>({
+export const store = new Godam<RootState, RootMutation, RootExpression, RootTask>({
     state: RootState,
     mutations: RootMutation,
-    tasks: RootTask
+    tasks: RootTask,
+    expressions: RootExpression
 },
     rooms
 )

@@ -1,7 +1,7 @@
-import { DerivedList } from "godam";
+import { Expressions } from "godam";
 import { profile } from "./state";
 
-export class ProfileDeriveds extends DerivedList<typeof profile> {
+export class ProfileExpression extends Expressions<typeof profile> {
     fullName() {
         return this.get(this.STATE.firstName) +
             this.get(this.STATE.lastName);

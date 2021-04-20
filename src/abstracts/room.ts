@@ -9,13 +9,13 @@ export class Room<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}> im
 
     STATE: { [P in keyof T_STATE]-?: P };
     MUTATION: { [P in keyof T_MUTATION]-?: P };
-    DERIVED: { [P in keyof T_DERIVED]-?: P };
+    EXPRESSION: { [P in keyof T_DERIVED]-?: P };
     TASK: { [P in keyof T_TASK]-?: P };
 
     private __prefix__: string;
     private __state__: { [key: string]: any };
     private __mutation__: Mutations;
-    private __derived__;
+    private __expression__;
     private __task__: Tasks;
     private __ob__: Observer;
 
@@ -38,11 +38,11 @@ export class Room<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}> im
     }
 
     get(name: string) {
-        this.__store__.get(this.__getNameWithRoom__(name));
+        return this.__store__.get(this.__getNameWithRoom__(name));
     }
 
-    derive(name: string) {
-        this.__store__.derive(this.__getNameWithRoom__(name));
+    eval(name: string, payload?: any) {
+        return this.__store__.eval(this.__getNameWithRoom__(name), payload);
     }
 
     private __onChange__(key, newValue, oldValue) {

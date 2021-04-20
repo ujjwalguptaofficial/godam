@@ -1,11 +1,11 @@
-import { Mutations, Tasks, DerivedList, Room } from "./abstracts";
+import { Mutations, Tasks, Expressions, Room } from "./abstracts";
 import { Observer, EventBus, initRoom } from "./helpers";
 import { IGodamRoom } from "./interfaces";
 
 export interface IStore {
     state: any;
     mutations?: typeof Mutations | any;
-    derivedList?: typeof DerivedList | any;
+    expressions?: typeof Expressions | any;
     tasks?: typeof Tasks | any;
 
     track?: boolean;
@@ -22,11 +22,11 @@ const getNameAndModule = (name: string) => {
 export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T_MODULE = {}> implements IGodamRoom {
     STATE: { [P in keyof T_STATE]-?: P };
     MUTATION: { [P in keyof T_MUTATION]-?: P };
-    DERIVED: { [P in keyof T_DERIVED]-?: P };
+    EXPRESSION: { [P in keyof T_DERIVED]-?: P };
     TASK: { [P in keyof T_TASK]-?: P };
     private __state__: { [key: string]: any };
     private __mutation__: Mutations;
-    private __derived__;
+    private __expression__;
     private __task__: Tasks;
     private __ob__: Observer;
     private __watchBus__: EventBus;
@@ -89,12 +89,13 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
         return console.error(`No state exist with name ${name} ${moduleName ? "" : "& module " + moduleName}`);
     }
 
-    derive(name: string, moduleName?: string) {
-        const ctx = this.__getCtx__("__derived__", moduleName);
-        const derived = ctx[name]
-        if (derived === undefined) return console.error(`No state exist with name ${name} ${moduleName ? "" : "& module " + moduleName}`);
-        if (!derived) return console.error(`No state exist with name ${name} ${moduleName ? "" : "& module " + moduleName}`);
-        return derived(name);
+    eval(expressionName: string, payload?) {
+        let { name, moduleName } = getNameAndModule(expressionName);
+        const ctx = this.__getCtx__("__expression__", moduleName);
+        if (name in ctx) {
+            return ctx[name].call(ctx, payload);
+        }
+        return console.error(`No state exist with name ${name} ${moduleName ? "" : "& module " + moduleName}`);
     }
 
     private __onChange__(key, newValue, oldValue) {

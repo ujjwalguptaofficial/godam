@@ -2,10 +2,10 @@ export interface IGodamRoom {
     do(taskName: string, payload?: any);
     commit(mutationName: string, payload?: any)
     get(name: string, moduleName?: string)
-    derive(name: string)
+    eval(name: string)
 
     STATE;
     MUTATION;
-    DERIVED;
+    EXPRESSION;
     TASK;
 }
