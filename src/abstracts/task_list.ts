@@ -13,7 +13,11 @@ export class Tasks<T_STATE = void, T_MUTATION = void, T_EXPRESSION = {}, T_TASK 
     EXPRESSION: { [P in keyof T_EXPRESSION]-?: P };
 
     protected get: GODAM_STATE<T_STATE>;
-    protected commit: GODAM_MUTATION<T_MUTATION>;
+    protected commit(name: keyof T_STATE, payload?: any);
+    protected commit(name: string, payload?: any);
+    protected commit(name: any, payload?: any) {
+
+    }
     protected eval: GODAM_EVAL<T_EXPRESSION>;
     protected do: GODAM_TASK<T_TASK>
 }

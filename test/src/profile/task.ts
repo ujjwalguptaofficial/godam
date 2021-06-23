@@ -5,7 +5,6 @@ import { ProfileExpression } from "./expression";
 
 export class ProfileTask extends Tasks<ProfileTask, ProfileMutation, ProfileExpression> {
     saveProfile({ firstName, lastName }) {
-        // this.commit("")
         this.commit("setFirstName", firstName);
         this.commit("setLastName", lastName);
         this.commit("saveCache@root", "save_profile");
