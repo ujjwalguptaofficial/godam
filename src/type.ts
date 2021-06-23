@@ -10,12 +10,6 @@ type GODAM_TASK3 = (name: any, moduleName?: string) => any
 
 export type GODAM_TASK<T> = GODAM_TASK1<T> | GODAM_TASK2 | GODAM_TASK3;
 
-type GODAM_MUTATION1<T> = (name: keyof T, payload?: any) => void
-type GODAM_MUTATION2 = (name: string, payload?: any) => void
-type GODAM_MUTATION3 = (name: any, payload?: any) => void
-
-export type GODAM_MUTATION<T> = GODAM_MUTATION1<T> | GODAM_MUTATION2 | GODAM_MUTATION3;
-
 type GODAM_EVAL1<T> = (name: keyof T, payload?: any) => any
 type GODAM_EVAL2 = (name: string, payload?: any) => any
 type GODAM_EVAL3 = (name: any, payload?: any) => any

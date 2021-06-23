@@ -5,9 +5,4 @@ export interface IGodamRoom {
     commit(mutationName: string | any, payload?: any): void
     get(name: string, moduleName?: string)
     eval: GODAM_EVAL<any>
-
-    STATE;
-    MUTATION;
-    EXPRESSION;
-    TASK;
 }

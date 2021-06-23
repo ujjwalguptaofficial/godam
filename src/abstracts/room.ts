@@ -8,11 +8,6 @@ import { GODAM_EVAL } from "../type";
 
 export class Room<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}> implements IGodamRoom {
 
-    STATE: { [P in keyof T_STATE]-?: P };
-    MUTATION: { [P in keyof T_MUTATION]-?: P };
-    EXPRESSION: { [P in keyof T_DERIVED]-?: P };
-    TASK: { [P in keyof T_TASK]-?: P };
-
     private __prefix__: string;
     private __state__: { [key: string]: any };
     private __mutation__: Mutations;

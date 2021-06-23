@@ -20,10 +20,7 @@ const getNameAndModule = (name: string) => {
 }
 
 export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T_MODULE = {}> implements IGodamRoom {
-    STATE: { [P in keyof T_STATE]-?: P };
-    MUTATION: { [P in keyof T_MUTATION]-?: P };
-    EXPRESSION: { [P in keyof T_DERIVED]-?: P };
-    TASK: { [P in keyof T_TASK]-?: P };
+
     private __state__: { [key: string]: any };
     private __mutation__: Mutations;
     private __expression__;
@@ -93,7 +90,9 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
         return console.error(`No state exist with name ${name} ${moduleName ? "" : "& module " + moduleName}`);
     }
 
-    eval(expressionName: string, payload?) {
+    eval(expressionName: keyof T_DERIVED, payload?)
+    eval(expressionName: string, payload?)
+    eval(expressionName: any, payload?) {
         let { name, moduleName } = getNameAndModule(expressionName);
         const ctx = this.__getCtx__("__expression__", moduleName);
         if (name in ctx) {

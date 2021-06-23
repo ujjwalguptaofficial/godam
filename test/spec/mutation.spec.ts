@@ -4,10 +4,10 @@ import { expect } from "chai";
 describe("State value", () => {
     it("commit in root state", () => {
         store.commit("setIsAuthenticated", true);
-        expect(store.get(store.STATE.isAuthenticated)).equal(true);
+        expect(store.get("isAuthenticated")).equal(true);
 
-        store.commit(store.MUTATION.setIsConfigLoaded, true);
-        expect(store.get(store.STATE.isConfigLoaded)).equal(true);
+        store.commit("setIsConfigLoaded", true);
+        expect(store.get("isConfigLoaded")).equal(true);
     })
 
     it("commit in moduled state", () => {

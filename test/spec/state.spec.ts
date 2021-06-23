@@ -3,11 +3,11 @@ import { expect } from "chai";
 
 describe("State value", () => {
     it("check root state", () => {
-        expect(store.get(store.STATE.appName)).equal("Godam");
-        expect(store.get(store.STATE.isAuthenticated)).equal(false);
-        expect(store.get(store.STATE.isConfigLoaded)).equal(false);
-        expect(store.get(store.STATE.apiServer)).equal("");
-        expect(store.get(store.STATE.errMessage)).equal(null);
+        expect(store.get("appName")).equal("Godam");
+        expect(store.get("isAuthenticated")).equal(false);
+        expect(store.get("isConfigLoaded")).equal(false);
+        expect(store.get("apiServer")).equal("");
+        expect(store.get("errMessage")).equal(null);
     })
 
     it("check profile state using module in second param", () => {
