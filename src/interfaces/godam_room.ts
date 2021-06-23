@@ -1,8 +1,10 @@
+import { GODAM_EVAL } from "../type";
+
 export interface IGodamRoom {
     do(taskName: string, payload?: any);
-    commit(mutationName: string, payload?: any)
+    commit(mutationName: string | any, payload?: any): void
     get(name: string, moduleName?: string)
-    eval(name: string)
+    eval: GODAM_EVAL<any>
 
     STATE;
     MUTATION;

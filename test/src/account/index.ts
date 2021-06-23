@@ -9,7 +9,10 @@ class AccountMutation extends Mutations<AccountState> {
     }
 }
 
-export default new Room({
+export const room = new Room<AccountState, AccountMutation>({
     state: AccountState,
     mutations: AccountMutation
 })
+// room.commit("state");
+
+export default room;

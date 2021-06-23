@@ -3,7 +3,7 @@ import { expect } from "chai";
 
 describe("State value", () => {
     it("commit in root state", () => {
-        store.commit(store.MUTATION.setIsAuthenticated, true);
+        store.commit("setIsAuthenticated", true);
         expect(store.get(store.STATE.isAuthenticated)).equal(true);
 
         store.commit(store.MUTATION.setIsConfigLoaded, true);

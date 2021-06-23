@@ -58,7 +58,9 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
         this.rooms = rooms as any;
     }
 
-    do(taskName: string, payload?: any) {
+    do(taskName: keyof T_TASK, payload?: any);
+    do(taskName: string, payload?: any);
+    do(taskName: any, payload?: any) {
         let { name, moduleName } = getNameAndModule(taskName);
         const ctx = this.__getCtx__("__task__", moduleName);
         const task = ctx[name]
@@ -66,16 +68,19 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
         return task.call(ctx, payload);
     }
 
-
-    commit(mutationName: string, payload?: any) {
-        let { name, moduleName } = getNameAndModule(mutationName);
+    commit(mutationName: keyof T_MUTATION, payload?: any): void;
+    commit(mutationName: string, payload?: any): void;
+    commit(mutationName: any, payload?: any) {
+        let { name, moduleName } = getNameAndModule(mutationName as string);
         const ctx = this.__getCtx__("__mutation__", moduleName);
         const mutation = ctx[name]
         if (!mutation) return console.error(`No mutation exist with name ${mutationName} ${moduleName ? "" : "& module " + moduleName}`);
         mutation.call(ctx, payload);
     }
 
-    get(name: string, moduleName?: string) {
+    get(name: keyof T_STATE, moduleName?: string): any;
+    get(name: string, moduleName?: string): any;
+    get(name: any, moduleName?: string) {
         if (!moduleName) {
             const result = getNameAndModule(name);
             name = result.name;

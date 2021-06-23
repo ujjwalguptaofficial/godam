@@ -4,10 +4,10 @@ import { RootMutation } from "./mutation";
 
 export class RootTask extends Tasks<RootState, RootMutation> {
     getConfig(isAuthenticated) {
-        const isConfigLoaded = this.get(this.STATE.isConfigLoaded);
+        const isConfigLoaded = this.get("isConfigLoaded");
         if (!isConfigLoaded) {
-            this.commit(this.MUTATION.setIsConfigLoaded, true);
-            this.commit(this.MUTATION.setIsAuthenticated, isAuthenticated);
+            this.commit("setIsConfigLoaded", true);
+            this.commit("setIsAuthenticated", isAuthenticated);
         }
     }
 }
