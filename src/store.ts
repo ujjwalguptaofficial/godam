@@ -101,12 +101,16 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
         return console.error(`No state exist with name ${name} ${moduleName ? "" : "& module " + moduleName}`);
     }
 
-    watch(propName: string, cb: (newValue, oldValue) => void) {
+    watch(propName: keyof T_STATE, cb: (newValue, oldValue) => void);
+    watch(propName: string, cb: (newValue, oldValue) => void);
+    watch(propName: any, cb: (newValue, oldValue) => void) {
         this.__watchBus__.on(propName, cb);
         return this;
     }
 
-    unwatch(propName: string, cb?: (newValue, oldValue) => void) {
+    unwatch(propName: keyof T_STATE, cb?: (newValue, oldValue) => void) 
+    unwatch(propName: string, cb?: (newValue, oldValue) => void) 
+    unwatch(propName: any, cb?: (newValue, oldValue) => void) {
         this.__watchBus__.off(propName, cb);
         return this;
     }

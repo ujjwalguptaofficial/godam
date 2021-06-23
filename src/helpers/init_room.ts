@@ -16,9 +16,7 @@ export function initRoom(this: Room, store: IStore, isParent?: boolean) {
         new store.expressions() : expression;
     const get = this.get.bind(this);
 
-    Object.assign(expression, {
-        get: get
-    })
+    expression['get'] = get;
     this['__expression__'] = expression;
 
     const task = store.tasks || {};
