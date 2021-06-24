@@ -1,6 +1,7 @@
 import { Mutations, Tasks, Expressions, Room } from "./abstracts";
 import { Observer, EventBus, initRoom } from "./helpers";
 import { IGodamRoom } from "./interfaces";
+import { getNameAndModule } from "./utils";
 
 export interface IStore {
     state: any;
@@ -39,8 +40,8 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
                 return this.eval(name, payload);
             }).on("get", (name, roomName) => {
                 return this.get(name, roomName);
-            }).on("change", (key, newVal, oldValue) => {
-                return this.__onChange__(key, newVal, oldValue);
+            }).on("change", (prop, newVal, oldValue) => {
+                return this.__onChange__(`${prop}@${key}`, newVal, oldValue);
             })
         }
         this.rooms = rooms as any;
@@ -87,9 +88,12 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
         let { name, moduleName } = getNameAndModule(expressionName);
         const ctx = this.__getCtx__("__expression__", moduleName);
         if (name in ctx) {
-            return ctx[name].call(ctx, payload);
+            if (ctx[name].call) {
+                return ctx[name].call(ctx, payload);
+            }
+            throw `Expression ${name} is not method.`;
         }
-        return console.error(`No state exist with name ${name} ${moduleName ? "" : "& module " + moduleName}`);
+        throw `No state exist with name ${name} ${moduleName ? "" : "& module " + moduleName}`;
     }
 
     watch(propName: keyof T_STATE, cb: (newValue, oldValue) => void);

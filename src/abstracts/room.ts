@@ -6,7 +6,7 @@ import { Observer } from "../helpers/observer";
 import { initRoom, EventBus } from "../helpers";
 import { GODAM_EVAL } from "../type";
 
-export class Room<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}> implements IGodamRoom {
+export class Room<T_STATE = {}, T_MUTATION = {}, T_EXPRESSION = {}, T_TASK = {}> implements IGodamRoom {
 
     private __prefix__: string;
     private __state__: { [key: string]: any };
@@ -14,6 +14,8 @@ export class Room<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}> im
     private __expression__;
     private __task__: Tasks;
     private __ob__: Observer;
+
+    private __computed__;
 
     private __watchBus__: EventBus;
 
@@ -37,7 +39,7 @@ export class Room<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}> im
     set(name: string, payload?)
     set(name: any, payload?) {
         const result = this.__watchBus__.emitSync("commit", this.__getNameWithRoom__(name as any), payload);
-        return result[0];
+        // return result[0];
     }
 
     get(name: keyof T_STATE): any;
@@ -46,16 +48,30 @@ export class Room<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}> im
         const result = this.__watchBus__.emitSync("get", this.__getNameWithRoom__(name));
         return result[0];
     }
-
-    eval: GODAM_EVAL<T_DERIVED>;
+    eval(name: keyof T_EXPRESSION, payload?: any)
+    eval(name: string, payload?: any)
+    eval(name: any, payload?: any) {
+        const result = this.__watchBus__.emitSync("eval", this.__getNameWithRoom__(name), payload);
+        return result[0];
+    }
 
     private __onChange__(key, newValue, oldValue) {
         this.__watchBus__.emit("change", key, newValue, oldValue);
+        this.__watchBus__.emit(key, newValue, oldValue);
     }
 
-}
+    watch(propName: keyof T_STATE, cb: (newValue, oldValue) => void);
+    watch(propName: string, cb: (newValue, oldValue) => void);
+    watch(propName: any, cb: (newValue, oldValue) => void) {
+        this.__watchBus__.on(propName, cb);
+        return this;
+    }
 
-Room.prototype.eval = function (name: string, payload?: any) {
-    const result = this.__watchBus__.emitSync("eval", this.__getNameWithRoom__(name), payload);
-    return result[0];
+    unwatch(propName: keyof T_STATE, cb?: (newValue, oldValue) => void)
+    unwatch(propName: string, cb?: (newValue, oldValue) => void)
+    unwatch(propName: any, cb?: (newValue, oldValue) => void) {
+        this.__watchBus__.off(propName, cb);
+        return this;
+    }
+
 }

@@ -32,7 +32,20 @@ export function initRoom(this: Room, store: IStore, isParent?: boolean) {
     this['__watchBus__'] = new EventBus(this);
 
     if (store.track !== false) {
+        const computed = this['__computed__'] || {};
+        const reactives = [];
+        for (const key in computed) {
+            const data = computed[key];
+            reactives.push(key);
+            data.args.forEach(arg => {
+                this.watch(arg, () => {
+                    this[key] = data.fn.call(this);
+                });
+            })
+        }
+
         this['__ob__'] = new Observer(this['__onChange__'].bind(this));
-        this['__ob__'].create(this['__state__']);
+        const state = this['__state__'];
+        this['__ob__'].create(state, Object.keys(state).concat(reactives));
     }
 }

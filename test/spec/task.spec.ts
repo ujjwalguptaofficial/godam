@@ -13,7 +13,6 @@ describe("Action value", () => {
 
     it("call getConfig", () => {
         store.do("getConfig");
-        debugger;
         expect(store.get("isAuthenticated")).equal(undefined);
         expect(store.get("isConfigLoaded")).equal(true);
 
