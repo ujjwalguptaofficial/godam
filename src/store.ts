@@ -7,16 +7,7 @@ export interface IStore {
     mutations?: typeof Mutations | any;
     expressions?: typeof Expressions | any;
     tasks?: typeof Tasks | any;
-
     track?: boolean;
-}
-
-const getNameAndModule = (name: string) => {
-    const splitName = name.split("@");
-    return {
-        name: splitName[0],
-        moduleName: splitName[1]
-    }
 }
 
 export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T_MODULE = {}> implements IGodamRoom {
