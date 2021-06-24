@@ -5,9 +5,9 @@ import { ProfileExpression } from "./expression";
 
 export class ProfileTask extends Tasks<ProfileTask, ProfileMutation, ProfileExpression> {
     saveProfile({ firstName, lastName }) {
-        this.commit("setFirstName", firstName);
-        this.commit("setLastName", lastName);
-        this.commit("saveCache@root", "save_profile");
+        this.set("setFirstName", firstName);
+        this.set("setLastName", lastName);
+        this.set("saveCache@root", "save_profile");
         const fullName = this.eval("fullName");
         assert(fullName === `${firstName}${lastName}`, "fullName expression not as expected")
     }

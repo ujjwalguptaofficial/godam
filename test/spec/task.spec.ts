@@ -3,7 +3,7 @@ import { expect } from "chai";
 
 describe("Action value", () => {
     it("reset root state & check", () => {
-        store.commit("reset");
+        store.set("reset");
         expect(store.get("appName")).equal("Godam");
         expect(store.get("isAuthenticated")).equal(false);
         expect(store.get("isConfigLoaded")).equal(false);
@@ -13,12 +13,13 @@ describe("Action value", () => {
 
     it("call getConfig", () => {
         store.do("getConfig");
+        debugger;
         expect(store.get("isAuthenticated")).equal(undefined);
         expect(store.get("isConfigLoaded")).equal(true);
 
         store.do("getConfig", true);
         expect(store.get("isAuthenticated")).equal(undefined);
-        store.commit("reset");
+        store.set("reset");
         store.do("getConfig", true);
         expect(store.get("isAuthenticated")).equal(true);
     })

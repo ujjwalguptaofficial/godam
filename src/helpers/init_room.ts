@@ -24,7 +24,7 @@ export function initRoom(this: Room, store: IStore, isParent?: boolean) {
 
     Object.assign(this['__task__'], {
         get: get,
-        commit: this.commit.bind(this),
+        set: this.set.bind(this),
         eval: this.eval.bind(this),
         do: this.do,
     })

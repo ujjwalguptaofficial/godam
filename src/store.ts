@@ -43,7 +43,7 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
             room['__watchBus__'].on("do", (name: string, payload?: any) => {
                 return this.do(name, payload);
             }).on("commit", (name: string, payload?: any) => {
-                return this.commit(name, payload);
+                return this.set(name, payload);
             }).on("eval", (name: string, payload?: any) => {
                 return this.eval(name, payload);
             }).on("get", (name, roomName) => {
@@ -65,9 +65,9 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
         return task.call(ctx, payload);
     }
 
-    commit(mutationName: keyof T_MUTATION, payload?: any): void;
-    commit(mutationName: string, payload?: any): void;
-    commit(mutationName: any, payload?: any) {
+    set(mutationName: keyof T_MUTATION, payload?: any): void;
+    set(mutationName: string, payload?: any): void;
+    set(mutationName: any, payload?: any) {
         let { name, moduleName } = getNameAndModule(mutationName as string);
         const ctx = this.__getCtx__("__mutation__", moduleName);
         const mutation = ctx[name]
@@ -108,8 +108,8 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
         return this;
     }
 
-    unwatch(propName: keyof T_STATE, cb?: (newValue, oldValue) => void) 
-    unwatch(propName: string, cb?: (newValue, oldValue) => void) 
+    unwatch(propName: keyof T_STATE, cb?: (newValue, oldValue) => void)
+    unwatch(propName: string, cb?: (newValue, oldValue) => void)
     unwatch(propName: any, cb?: (newValue, oldValue) => void) {
         this.__watchBus__.off(propName, cb);
         return this;

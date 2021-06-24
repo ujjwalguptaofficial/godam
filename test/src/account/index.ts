@@ -13,6 +13,6 @@ export const room = new Room<AccountState, AccountMutation>({
     state: AccountState,
     mutations: AccountMutation
 })
-// room.commit("state");
+// room.set("state");
 
 export default room;

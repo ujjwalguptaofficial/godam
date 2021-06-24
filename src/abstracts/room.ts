@@ -33,9 +33,9 @@ export class Room<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}> im
         return result[0];
     }
 
-    commit(name: keyof T_MUTATION, payload?)
-    commit(name: string, payload?)
-    commit(name: any, payload?) {
+    set(name: keyof T_MUTATION, payload?)
+    set(name: string, payload?)
+    set(name: any, payload?) {
         const result = this.__watchBus__.emitSync("commit", this.__getNameWithRoom__(name as any), payload);
         return result[0];
     }
