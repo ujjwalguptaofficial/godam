@@ -12,6 +12,7 @@ const libraryTarget = [{
 
 function getConfigForTaget(target) {
     return {
+        mode: 'development',
         devtool: 'source-map',
         output: {
             path: path.join(__dirname, "../dist"),

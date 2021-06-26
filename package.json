@@ -1,6 +1,6 @@
 {
   "name": "godam",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "",
   "main": "dist/npm.export.js",
   "types": "dist/ts/index.d.ts",
@@ -11,7 +11,8 @@
     "webpack:prod": "webpack --config webpack/webpack.prod.config.js",
     "test": "cd test && npm run test",
     "build:test": "npm run build:pack && npm run install:test",
-    "install:test": "cd test && npm run install:test"
+    "install:test": "cd test && npm run install:test",
+    "deploy": "npm run build:test && npm run webpack:prod"
   },
   "repository": {
     "type": "git",

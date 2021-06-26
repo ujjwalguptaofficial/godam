@@ -1,6 +1,5 @@
 import { Room } from "../abstracts";
 import { IStore } from "../store";
-import { IGodamRoom } from "../interfaces";
 import { Observer } from "./observer";
 import { EventBus } from "./event_bus";
 export function initRoom(this: Room, store: IStore, onWatchBusInit: Function) {
@@ -48,7 +47,6 @@ export function initRoom(this: Room, store: IStore, onWatchBusInit: Function) {
                 const data = computed[key];
                 data.args.forEach(arg => {
                     this.watch(arg, () => {
-                        debugger;
                         expression[key] = data.fn.call(expression);
                     });
                 })

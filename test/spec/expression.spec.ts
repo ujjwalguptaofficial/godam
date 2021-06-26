@@ -26,6 +26,8 @@ describe("Expression value", () => {
             store.watch('expression.address@profile', (newValue, oldValue) => {
                 expect(newValue).equal("My address is Earth");
                 expect(oldValue).equal("My address is India");
+                expect(profile.eval("addressTextCounter")).equal(2);
+
                 setTimeout(res, 500)
             })
             profile.set("setAddress", "Earth");
