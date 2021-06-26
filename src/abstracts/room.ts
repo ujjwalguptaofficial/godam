@@ -19,8 +19,10 @@ export class Room<T_STATE = {}, T_MUTATION = {}, T_EXPRESSION = {}, T_TASK = {}>
 
     private __watchBus__: EventBus;
 
+    private __private__: { store: IStore } = {} as any;
+
     constructor(store: IStore) {
-        initRoom.call(this, store);
+        this.__private__.store = store;
     }
 
     __getNameWithRoom__(name: string) {

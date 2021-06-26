@@ -3,7 +3,8 @@ import { IStore } from "../store";
 import { IGodamRoom } from "../interfaces";
 import { Observer } from "./observer";
 import { EventBus } from "./event_bus";
-export function initRoom(this: Room, store: IStore, isParent?: boolean) {
+export function initRoom(this: Room, store: IStore, onWatchBusInit: Function) {
+
     this['__state__'] = typeof store.state === 'function' ? new store.state() : store.state;
 
     let mutations = store.mutations;
@@ -30,22 +31,32 @@ export function initRoom(this: Room, store: IStore, isParent?: boolean) {
     })
 
     this['__watchBus__'] = new EventBus(this);
+    if (onWatchBusInit) {
+        onWatchBusInit();
+    }
 
     if (store.track !== false) {
-        const computed = this['__computed__'] || {};
-        const reactives = [];
-        for (const key in computed) {
-            const data = computed[key];
-            reactives.push(key);
-            data.args.forEach(arg => {
-                this.watch(arg, () => {
-                    this[key] = data.fn.call(this);
-                });
-            })
-        }
+        const expression = this['__expression__'];
+        const computed = expression['__computed__'];
 
+        debugger;
         this['__ob__'] = new Observer(this['__onChange__'].bind(this));
         const state = this['__state__'];
-        this['__ob__'].create(state, Object.keys(state).concat(reactives));
+        this['__ob__'].create(state);
+
+        if (computed) {
+            for (const key in computed) {
+                const data = computed[key];
+                data.args.forEach(arg => {
+                    this.watch(arg, () => {
+                        expression[key] = data.fn.call(expression);
+                    });
+                })
+            }
+            const ob = new Observer((key, newValue, oldValue) => {
+                // this['__onChange__'].call(this, `expression.${key}`, newValue, oldValue);
+            });
+            ob.create(expression, Object.keys(computed));
+        }
     }
 }

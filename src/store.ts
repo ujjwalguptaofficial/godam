@@ -24,27 +24,28 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
 
     constructor(store: IStore, rooms?: { [key: string]: Room }) {
 
-        initRoom.call(this, store, true);
+        initRoom.call(this, store);
 
         rooms = rooms as any || {};
         rooms = typeof rooms === "function" ? new (rooms as any)() : rooms;
-
+        this.rooms = rooms as any;
         for (const key in rooms) {
             const room = rooms[key];
             room['__prefix__'] = key;
-            room['__watchBus__'].on("do", (name: string, payload?: any) => {
-                return this.do(name, payload);
-            }).on("commit", (name: string, payload?: any) => {
-                return this.set(name, payload);
-            }).on("eval", (name: string, payload?: any) => {
-                return this.eval(name, payload);
-            }).on("get", (name, roomName) => {
-                return this.get(name, roomName);
-            }).on("change", (prop, newVal, oldValue) => {
-                return this.__onChange__(`${prop}@${key}`, newVal, oldValue);
-            })
+            initRoom.call(room, room['__private__'].store, () => {
+                room['__watchBus__'].on("do", (name: string, payload?: any) => {
+                    return this.do(name, payload);
+                }).on("commit", (name: string, payload?: any) => {
+                    return this.set(name, payload);
+                }).on("eval", (name: string, payload?: any) => {
+                    return this.eval(name, payload);
+                }).on("get", (name, roomName) => {
+                    return this.get(name, roomName);
+                }).on("change", (prop, newVal, oldValue) => {
+                    return this.__onChange__(`${prop}@${key}`, newVal, oldValue);
+                })
+            });
         }
-        this.rooms = rooms as any;
     }
 
     do(taskName: keyof T_TASK, payload?: any);
@@ -91,7 +92,7 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
             if (ctx[name].call) {
                 return ctx[name].call(ctx, payload);
             }
-            throw `Expression ${name} is not method.`;
+            return ctx[name];
         }
         throw `No state exist with name ${name} ${moduleName ? "" : "& module " + moduleName}`;
     }

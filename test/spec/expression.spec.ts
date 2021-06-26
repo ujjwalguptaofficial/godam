@@ -11,7 +11,20 @@ describe("Expression value", () => {
         }
     })
 
-    it("check nameWithText", () => {
-        expect(profile.eval("nameWithTextCounter")).equal(0);
+    it("check address with text", () => {
+        expect(profile.eval("addressTextCounter")).equal(1);
+
+        expect(profile.eval("address")).equal("My address is India");
+        expect(profile.eval("address")).equal("My address is India");
+
+        expect(profile.eval("addressTextCounter")).equal(1);
+        // return new Promise((res) => {
+        //     profile.set("setAddress", "Earth");
+        //     profile.watch('expression.address', (newValue, oldValue) => {
+        //         expect(newValue).equal("Earth");
+        //         expect(oldValue).equal("India");
+        //         res();
+        //     })
+        // });
     })
 })

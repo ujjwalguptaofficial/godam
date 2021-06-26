@@ -5,6 +5,7 @@ export const Computed = (...args): MethodDecorator => {
         if (!target[propName]) {
             target[propName] = {};
         }
+        // Object.defineProperty('')
         target[propName][methodName] = { args, fn: descriptor.get };
     });
 };
