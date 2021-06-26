@@ -39,7 +39,6 @@ export function initRoom(this: Room, store: IStore, onWatchBusInit: Function) {
         const expression = this['__expression__'];
         const computed = expression['__computed__'];
 
-        debugger;
         this['__ob__'] = new Observer(this['__onChange__'].bind(this));
         const state = this['__state__'];
         this['__ob__'].create(state);
@@ -49,12 +48,13 @@ export function initRoom(this: Room, store: IStore, onWatchBusInit: Function) {
                 const data = computed[key];
                 data.args.forEach(arg => {
                     this.watch(arg, () => {
+                        debugger;
                         expression[key] = data.fn.call(expression);
                     });
                 })
             }
             const ob = new Observer((key, newValue, oldValue) => {
-                // this['__onChange__'].call(this, `expression.${key}`, newValue, oldValue);
+                this['__onChange__'].call(this, `expression.${key}`, newValue, oldValue);
             });
             ob.create(expression, Object.keys(computed));
         }
