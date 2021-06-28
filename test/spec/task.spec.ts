@@ -32,4 +32,22 @@ describe("Action value", () => {
         expect(store.get("lastName@profile")).equal("SuperMan");
         expect(store.eval("isCached", "save_profile")).equal(true);
     })
+
+    it('call invalid task', () => {
+        try {
+            store.do("addStudent");
+            throw new Error("Should have been error")
+        } catch (error) {
+            expect(error).equal(`No task exist with name addStudent`);
+        }
+    })
+
+    it('call invalid task with module', () => {
+        try {
+            store.do("addStudent@student");
+            throw new Error("Should have been error")
+        } catch (error) {
+            expect(error).equal(`No task exist with name addStudent & module student`);
+        }
+    })
 })

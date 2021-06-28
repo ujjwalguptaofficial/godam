@@ -1,0 +1,6 @@
+node_modules
+*.tgz
+src
+test
+build
+build_helper

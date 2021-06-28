@@ -22,7 +22,12 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
 
     rooms: { [P in keyof T_MODULE]-?: T_MODULE[P]; };
 
+    track: boolean;
+
     constructor(store: IStore, rooms?: { [key: string]: Room }) {
+        if (this.track == null) {
+            this.track = Godam.track;
+        }
 
         initRoom.call(this, store);
 
@@ -52,9 +57,11 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
     do(taskName: string, payload?: any);
     do(taskName: any, payload?: any) {
         let { name, moduleName } = getNameAndModule(taskName);
-        const ctx = this.__getCtx__("__task__", moduleName);
+        const ctx = this.__getCtx__("__task__", moduleName) || {};
         const task = ctx[name]
-        if (!task) return console.error(`No task exist with name ${taskName} ${moduleName ? "" : "& module " + moduleName}`);
+        if (!task) {
+            throw `No task exist with name ${name} ${moduleName ? "& module " + moduleName : ""}`.trim();
+        }
         return task.call(ctx, payload);
     }
 
@@ -62,9 +69,11 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
     set(mutationName: string, payload?: any): void;
     set(mutationName: any, payload?: any) {
         let { name, moduleName } = getNameAndModule(mutationName as string);
-        const ctx = this.__getCtx__("__mutation__", moduleName);
+        const ctx = this.__getCtx__("__mutation__", moduleName) || {};
         const mutation = ctx[name]
-        if (!mutation) return console.error(`No mutation exist with name ${mutationName} ${moduleName ? "" : "& module " + moduleName}`);
+        if (!mutation) {
+            throw `No mutation exist with name ${name} ${moduleName ? "& module " + moduleName : ""}`.trim();
+        }
         mutation.call(ctx, payload);
     }
 
@@ -94,7 +103,7 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
             }
             return ctx[name];
         }
-        throw `No state exist with name ${name} ${moduleName ? "" : "& module " + moduleName}`;
+        throw `No expression exist with name ${name} ${moduleName ? "" : "& module " + moduleName}`;
     }
 
     watch(propName: keyof T_STATE, cb: (newValue, oldValue) => void);
@@ -126,5 +135,7 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
         }
         return ctx;
     }
+
+    static track = true;
 
 }

@@ -42,4 +42,22 @@ describe("State value", () => {
         ).equal("gupta");
 
     })
+
+    it('call invalid mutation', () => {
+        try {
+            store.set("invalid");
+            throw new Error("Should have been error")
+        } catch (error) {
+            expect(error).equal(`No mutation exist with name invalid`);
+        }
+    })
+
+    it('call invalid mutation with module', () => {
+        try {
+            store.set("invalid@invalid");
+            throw new Error("Should have been error")
+        } catch (error) {
+            expect(error).equal(`No mutation exist with name invalid & module invalid`);
+        }
+    })
 })
