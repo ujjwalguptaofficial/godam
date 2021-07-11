@@ -122,6 +122,7 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
 
     private __onChange__(key, newValue, oldValue) {
         this.__watchBus__.emit(key, newValue, oldValue);
+        this.__watchBus__.emit("change", key, newValue, oldValue);
     }
 
     private __getCtx__(prop: string, moduleName: string) {
