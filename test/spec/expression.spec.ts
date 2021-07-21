@@ -27,9 +27,27 @@ describe("Expression value", () => {
                 expect(newValue).equal("My address is Earth");
                 expect(oldValue).equal("My address is India");
                 expect(profile.eval("addressTextCounter")).equal(2);
-
-                setTimeout(res, 500)
+                // setTimeout(res, 500)
             })
+            let changeCount = 0;
+            const onChange = (key, newValue, oldValue) => {
+                if (changeCount == 0) {
+                    expect(key).to.equal("address@profile");
+                    expect(newValue).equal("Earth");
+                    expect(oldValue).equal("India");
+                }
+                else {
+                    expect(key).to.equal("expression.address@profile");
+                    expect(newValue).equal("My address is Earth");
+                    expect(oldValue).equal("My address is India");
+                    setTimeout(() => {
+                        store.off('change');
+                        res();
+                    }, 500)
+                }
+                ++changeCount;
+            };
+            store.on('change', onChange);
             profile.set("setAddress", "Earth");
         });
     })

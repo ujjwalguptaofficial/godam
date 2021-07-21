@@ -1,7 +1,7 @@
 import { IGodamRoom } from "../interfaces";
 import { Godam, IStore } from "../store";
-import { Mutations } from "./mutation";
-import { Tasks } from "./task_list";
+import { Mutation } from "./mutation";
+import { Task } from "./task_list";
 import { Observer } from "../helpers/observer";
 import { initRoom, EventBus } from "../helpers";
 import { GODAM_EVAL } from "../type";
@@ -10,9 +10,9 @@ export class Room<T_STATE = {}, T_MUTATION = {}, T_EXPRESSION = {}, T_TASK = {}>
 
     private __prefix__: string;
     private __state__: { [key: string]: any };
-    private __mutation__: Mutations;
+    private __mutation__: Mutation;
     private __expression__;
-    private __task__: Tasks;
+    private __task__: Task;
     private __ob__: Observer;
 
     private __computed__;

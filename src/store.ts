@@ -1,22 +1,22 @@
-import { Mutations, Tasks, Expressions, Room } from "./abstracts";
+import { Mutation, Task, Expression, Room } from "./abstracts";
 import { Observer, EventBus, initRoom } from "./helpers";
 import { IGodamRoom } from "./interfaces";
 import { getNameAndModule } from "./utils";
 
 export interface IStore {
     state: any;
-    mutations?: typeof Mutations | any;
-    expressions?: typeof Expressions | any;
-    tasks?: typeof Tasks | any;
+    mutations?: typeof Mutation | any;
+    expressions?: typeof Expression | any;
+    tasks?: typeof Task | any;
     track?: boolean;
 }
 
 export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T_MODULE = {}> implements IGodamRoom {
 
     private __state__: { [key: string]: any };
-    private __mutation__: Mutations;
+    private __mutation__: Mutation;
     private __expression__;
-    private __task__: Tasks;
+    private __task__: Task;
     private __ob__: Observer;
     private __watchBus__: EventBus;
 
@@ -106,18 +106,27 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
         throw `No expression exist with name ${name} ${moduleName ? "" : "& module " + moduleName}`;
     }
 
+    on(key: string, cb: (key, newValue, oldValue) => void) {
+        this.__watchBus__.on(key, cb);
+        return this;
+    }
+
+    off(key: string, cb?: (key, newValue, oldValue) => void) {
+        this.__watchBus__.off(key, cb);
+        return this;
+    }
+
     watch(propName: keyof T_STATE, cb: (newValue, oldValue) => void);
     watch(propName: string, cb: (newValue, oldValue) => void);
     watch(propName: any, cb: (newValue, oldValue) => void) {
-        this.__watchBus__.on(propName, cb);
-        return this;
+        return this.on(propName, cb);
     }
+
 
     unwatch(propName: keyof T_STATE, cb?: (newValue, oldValue) => void)
     unwatch(propName: string, cb?: (newValue, oldValue) => void)
     unwatch(propName: any, cb?: (newValue, oldValue) => void) {
-        this.__watchBus__.off(propName, cb);
-        return this;
+        return this.off(propName, cb);
     }
 
     private __onChange__(key, newValue, oldValue) {

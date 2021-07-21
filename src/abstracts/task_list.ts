@@ -1,13 +1,6 @@
 import { GODAM_STATE, GODAM_TASK, GODAM_EVAL } from "../type";
 
-// interface ITaskList {
-//     protected get: GODAM_STATE<any>;
-//     commit;
-//     eval;
-//     do;
-// }
-
-export class Tasks<T_STATE = void, T_MUTATION = void, T_EXPRESSION = {}, T_TASK = void> {
+export class Task<T_STATE = void, T_MUTATION = void, T_EXPRESSION = {}, T_TASK = void> {
 
     protected get: GODAM_STATE<T_STATE>;
 

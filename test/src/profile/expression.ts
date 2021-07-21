@@ -1,7 +1,7 @@
-import { Expressions, Computed } from "godam";
+import { Expression, Computed } from "godam";
 import { profile } from "./state";
 
-export class ProfileExpression extends Expressions<typeof profile> {
+export class ProfileExpression extends Expression<typeof profile> {
 
     addressTextCounter_ = 0;
 

@@ -1,7 +1,7 @@
 import { profile } from "./state";
-import { Mutations } from "godam";
+import { Mutation } from "godam";
 
-export class ProfileMutation extends Mutations<typeof profile> {
+export class ProfileMutation extends Mutation<typeof profile> {
     setFirstName(value) {
         this.state.firstName = value;
     }

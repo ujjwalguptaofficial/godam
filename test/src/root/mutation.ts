@@ -1,8 +1,8 @@
-import { Mutations } from "godam";
+import { Mutation } from "godam";
 import { RootState } from "./state";
 
 
-export class RootMutation extends Mutations<RootState> {
+export class RootMutation extends Mutation<RootState> {
     setIsAuthenticated(value) {
         this.state.isAuthenticated = value;
     }

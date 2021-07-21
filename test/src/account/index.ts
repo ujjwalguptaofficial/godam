@@ -1,9 +1,9 @@
-import { Godam, Mutations, Room } from "godam";
+import { Godam, Mutation, Room } from "godam";
 
 class AccountState {
     id: string = ""
 }
-class AccountMutation extends Mutations<AccountState> {
+class AccountMutation extends Mutation<AccountState> {
     setId(value) {
         this.state.id = value;
     }
