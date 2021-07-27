@@ -98,10 +98,11 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
         let { name, moduleName } = getNameAndModule(expressionName);
         const ctx = this.__getCtx__("__expression__", moduleName);
         if (name in ctx) {
-            if (ctx[name].call) {
-                return ctx[name].call(ctx, payload);
+            const value = ctx[name];
+            if (value && value.call) {
+                return value.call(ctx, payload);
             }
-            return ctx[name];
+            return value;
         }
         throw `No expression exist with name ${name} ${moduleName ? "" : "& module " + moduleName}`;
     }

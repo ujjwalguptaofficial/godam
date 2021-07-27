@@ -5,19 +5,21 @@ import { expect } from "chai";
 describe("Expression value", () => {
 
     it("check root expression", () => {
-        // expect(store.eval("rootError")).equal(null);
+        expect(store.eval("rootError")).equal(null);
+        const valueToSet = "network issue"
         return new Promise((res) => {
             // expect(store.eval("rootError")).equal(null);
             store.watch('expression.rootError', (newValue, oldValue) => {
-                expect(newValue).equal("network issue");
+                expect(newValue).equal(valueToSet);
                 expect(oldValue).equal(null);
+                expect(store.eval("rootError")).equal(valueToSet);
                 res();
             })
-            store.set("errMessage", "network issue")
+            store.set("errMessage", valueToSet);
         });
     });
 
-    it("check withoutGet expression", () => {
+    it("computed without get expression", () => {
         expect(store.eval("errorWithoutGet")).equal('Computed method should be get only');
     });
 
