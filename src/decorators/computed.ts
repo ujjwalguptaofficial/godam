@@ -5,7 +5,12 @@ export const Computed = (...args): MethodDecorator => {
         if (!target[propName]) {
             target[propName] = {};
         }
-        // Object.defineProperty('')
-        target[propName][methodName] = { args, fn: descriptor.get };
+        let fn = descriptor.get;
+        if (fn == null) {
+            fn = () => {
+                return "Computed method should be get only";
+            }
+        }
+        target[propName][methodName] = { args, fn: fn };
     });
 };

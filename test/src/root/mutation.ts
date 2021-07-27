@@ -1,5 +1,6 @@
 import { Mutation } from "godam";
 import { RootState } from "./state";
+import { store } from "src";
 
 
 export class RootMutation extends Mutation<RootState> {
@@ -13,8 +14,12 @@ export class RootMutation extends Mutation<RootState> {
     reset() {
         Object.assign(this.state, new RootState());
     }
-    
+
     saveCache(key) {
         this.state.cache[key] = true;
+    }
+
+    errMessage(value) {
+        this.state.errMessage = value;
     }
 }

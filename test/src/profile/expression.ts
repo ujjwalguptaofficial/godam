@@ -24,7 +24,6 @@ export class ProfileExpression extends Expression<typeof profile> {
     @Computed("address")
     get address() {
         ++this.addressTextCounter_;
-        debugger;
         return `My address is ${this.get("address")}`;
     }
 }

@@ -3,6 +3,25 @@ import profile from "../src/profile";
 import { expect } from "chai";
 
 describe("Expression value", () => {
+
+    it("check root expression", () => {
+        // expect(store.eval("rootError")).equal(null);
+        return new Promise((res) => {
+            // expect(store.eval("rootError")).equal(null);
+            store.watch('expression.rootError', (newValue, oldValue) => {
+                expect(newValue).equal("network issue");
+                expect(oldValue).equal(null);
+                res();
+            })
+            store.set("errMessage", "network issue")
+        });
+    });
+
+    it("check withoutGet expression", () => {
+        expect(store.eval("errorWithoutGet")).equal('Computed method should be get only');
+    });
+
+
     it("check propWithoutGet", () => {
         try {
             expect(profile.eval("propWithoutGet")).equal(0);
