@@ -4,6 +4,10 @@ import { profile } from "./state";
 export class ProfileExpression extends Expression<typeof profile> {
 
     addressTextCounter_ = 0;
+    constructor() {
+        super();
+        this.markComputed(["address"], "address");
+    }
 
     addressTextCounter() {
         return this.addressTextCounter_;
@@ -21,7 +25,7 @@ export class ProfileExpression extends Expression<typeof profile> {
         return `My name is ${this.get("firstName")} ${this.get("lastName")}`;
     }
 
-    @Computed("address")
+    // @Computed("address")
     get address() {
         ++this.addressTextCounter_;
         return `My address is ${this.get("address")}`;
