@@ -6,7 +6,7 @@
   "scripts": {
     "test": "cross-env NODE_ENV=test karma start karma.conf.js",
     "install:test": "npm run install:lib && npm run test",
-    "install:lib": "npm i ../godam-0.4.0.tgz --no-save"
+    "install:lib": "npm i ../godam-0.5.0.tgz --no-save"
   },
   "author": "",
   "license": "ISC",
