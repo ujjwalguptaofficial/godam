@@ -1,4 +1,6 @@
-import { isArray, getObjectLength, isObject } from "../utils";
+import { getObjectLength } from "./get_object_length";
+import { isObject } from "./is_object";
+import { isArray } from "./is_array";
 
 export class Observer {
 

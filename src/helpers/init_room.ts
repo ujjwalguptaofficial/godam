@@ -1,6 +1,6 @@
 import { Room } from "../abstracts";
 import { IStore } from "../store";
-import { Observer } from "./observer";
+import { Observer } from "../utils";
 import { EventBus } from "./event_bus";
 export function initRoom(this: Room, store: IStore, onWatchBusInit: Function) {
 

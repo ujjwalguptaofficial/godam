@@ -2,7 +2,7 @@ import { IGodamRoom } from "../interfaces";
 import { Godam, IStore } from "../store";
 import { Mutation } from "./mutation";
 import { Task } from "./task_list";
-import { Observer } from "../helpers/observer";
+import { Observer } from "../utils";
 import { initRoom, EventBus } from "../helpers";
 import { GODAM_EVAL } from "../type";
 
