@@ -79,28 +79,31 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
 
     get(name: keyof T_STATE, moduleName?: string): any;
     get(name: string, moduleName?: string): any;
-    get(name: any, moduleName?: string) {
+    get(stateName: any, moduleName?: string) {
         if (!moduleName) {
-            const result = getNameAndModule(name);
-            name = result.name;
+            const result = getNameAndModule(stateName);
+            stateName = result.name;
             moduleName = result.moduleName;
         }
         const ctx = this.__getCtx__("__state__", moduleName);
-        if (name in ctx) {
-            return ctx[name];
+        if (stateName in ctx) {
+            return ctx[stateName];
         }
-        return console.error(`No state exist with name ${name} ${moduleName ? "" : "& module " + moduleName}`);
+        return console.error(`No state exist with name ${stateName} ${moduleName ? "" : "& module " + moduleName}`);
     }
 
     eval(expressionName: keyof T_DERIVED, payload?)
     eval(expressionName: string, payload?)
     eval(expressionName: any, payload?) {
         let { name, moduleName } = getNameAndModule(expressionName);
-        const ctx = this.__getCtx__("__expression__", moduleName);
-        if (name in ctx) {
-            const value = ctx[name];
+        const room = this.__getRoom__(moduleName);
+        const expression = room['__expression__'];
+
+        // const ctx = this.__getCtx__("__expression__", moduleName);
+        if (name in expression) {
+            const value = room['__computed__'][name] || expression[name];
             if (value && value.call) {
-                return value.call(ctx, payload);
+                return value.call(expression, payload);
             }
             return value;
         }
@@ -135,16 +138,27 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
         this.__watchBus__.emit("change", key, newValue, oldValue);
     }
 
+    private __getRoom__(roomName: string) {
+        const root = roomName && roomName !== "root" ?
+            this.rooms[roomName] : this;
+        if (root == null) {
+            throw new Error(`no room found - ${roomName}`);
+        }
+        return root as Room;
+    }
+
     private __getCtx__(prop: string, moduleName: string) {
-        let ctx;
-        if (moduleName && moduleName !== "root") {
-            const module = this.rooms[moduleName];
-            ctx = module && module[prop];
-        }
-        else {
-            ctx = this[prop];
-        }
-        return ctx;
+        const room = this.__getRoom__(moduleName);
+        return room[prop];
+        // let ctx;
+        // if (moduleName && moduleName !== "root") {
+        //     const module = this.rooms[moduleName];
+        //     ctx = module && module[prop];
+        // }
+        // else {
+        //     ctx = this[prop];
+        // }
+        // return ctx;
     }
 
     static track = true;

@@ -33,6 +33,7 @@ export function initRoom(this: Room, store: IStore, onWatchBusInit: Function) {
     if (onWatchBusInit) {
         onWatchBusInit();
     }
+    this['__computed__'] = {};
 
     if (store.track !== false) {
         const expression = this['__expression__'];
@@ -47,14 +48,15 @@ export function initRoom(this: Room, store: IStore, onWatchBusInit: Function) {
                 const data = computed[key];
                 data.args.forEach(arg => {
                     this.watch(arg, () => {
-                        expression[key] = data.fn.call(expression);
+                        this['__computed__'][key] = data.fn.call(expression);
                     });
                 })
+                this['__computed__'][key] = data.fn.call(expression);
             }
             const ob = new Observer((key, newValue, oldValue) => {
                 this['__onChange__'].call(this, `expression.${key}`, newValue, oldValue);
             });
-            ob.create(expression, Object.keys(computed));
+            ob.create(this['__computed__']);
         }
     }
 }

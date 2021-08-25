@@ -57,7 +57,16 @@ describe("State value", () => {
             store.set("invalid@invalid");
             throw new Error("Should have been error")
         } catch (error) {
-            expect(error).equal(`No mutation exist with name invalid & module invalid`);
+            expect(error.message).equal(`no room found - invalid`);
+        }
+    })
+
+    it('call invalid mutation with module', () => {
+        try {
+            store.set("invalid@profile");
+            throw new Error("Should have been error")
+        } catch (error) {
+            expect(error).equal(`No mutation exist with name invalid & module profile`);
         }
     })
 })

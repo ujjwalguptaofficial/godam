@@ -44,10 +44,10 @@ describe("Action value", () => {
 
     it('call invalid task with module', () => {
         try {
-            store.do("addStudent@student");
+            store.do("addStudent@profile");
             throw new Error("Should have been error")
         } catch (error) {
-            expect(error).equal(`No task exist with name addStudent & module student`);
+            expect(error).equal(`No task exist with name addStudent & module profile`);
         }
     })
 })
