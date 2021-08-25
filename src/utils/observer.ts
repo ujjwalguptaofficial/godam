@@ -14,7 +14,7 @@ export class Observer {
         const cached = {};
         const onChange = this.onChange;
         if (isArray(input)) {
-            keys = keys || ["push", "splice"];
+            keys = keys || ["push", "splice", 'pop'];
             keys.forEach(key => {
                 cached[key] = this[key];
                 Object.defineProperty(input, key, {

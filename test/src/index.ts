@@ -2,10 +2,12 @@ import { RootState, RootMutation, RootTask, RootExpression } from "./root";
 import { Godam } from "godam";
 import profileStore from "./profile";
 import Account from "./account";
+import Shop from "./shop";
 
 const rooms = {
     profile: profileStore,
-    account: Account
+    account: Account,
+    shop: Shop
 }
 
 export const store = new Godam<RootState, RootMutation, RootExpression, RootTask>({
