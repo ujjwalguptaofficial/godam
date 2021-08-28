@@ -4,3 +4,6 @@ src
 test
 build
 build_helper
+
+#definition
+!dist/src
