@@ -6,7 +6,7 @@ import { ProfileExpression } from "./expression";
 
 export default new Room<typeof profile, ProfileMutation, ProfileExpression>({
     state: profile,
-    mutations: ProfileMutation,
-    tasks: ProfileTask,
-    expressions: ProfileExpression
+    mutation: ProfileMutation,
+    task: ProfileTask,
+    expression: ProfileExpression
 })

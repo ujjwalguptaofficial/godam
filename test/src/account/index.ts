@@ -11,7 +11,7 @@ class AccountMutation extends Mutation<AccountState> {
 
 export const room = new Room<AccountState, AccountMutation>({
     state: AccountState,
-    mutations: AccountMutation
+    mutation: AccountMutation
 })
 // room.set("state");
 

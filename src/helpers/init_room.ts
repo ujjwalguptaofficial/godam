@@ -1,4 +1,4 @@
-import { Room } from "../abstracts";
+import { Room, Mutation } from "../abstracts";
 import { IStore } from "../store";
 import { Observer, isArray } from "../utils";
 import { EventBus } from "./event_bus";
@@ -6,21 +6,21 @@ export function initRoom(this: Room, store: IStore, onWatchBusInit: Function) {
 
     this['__state__'] = typeof store.state === 'function' ? new store.state() : store.state;
 
-    let mutations = store.mutations;
-    mutations = mutations ? new store.mutations() : {} as any;
-    mutations.state = this['__state__'];
+    let mutations = store.mutation;
+    mutations = mutations ? new (store as any).mutation() : {} as any;
+    (mutations as Mutation)['state'] = this['__state__'];
     this['__mutation__'] = mutations as any;
 
-    let expression = store.expressions || {};
+    let expression = store.expression || {};
     expression = typeof expression === "function" ?
-        new store.expressions() : expression;
+        new (store as any).expression() : expression;
     const get = this.get.bind(this);
 
     expression['get'] = get;
     this['__expression__'] = expression;
 
-    const task = store.tasks || {};
-    this['__task__'] = typeof task === "function" ? new task() : task as any;
+    const task = store.task || {};
+    this['__task__'] = typeof task === "function" ? new (task as any)() : task as any;
 
     Object.assign(this['__task__'], {
         get: get,

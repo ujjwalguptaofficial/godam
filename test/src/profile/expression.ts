@@ -6,7 +6,7 @@ export class ProfileExpression extends Expression<typeof profile> {
     addressTextCounter_ = 0;
     constructor() {
         super();
-        this.markComputed(["address"], "address");
+        this.markComputed("address", 'address');
     }
 
     addressTextCounter() {

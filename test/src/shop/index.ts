@@ -5,6 +5,6 @@ import { ShopExpression } from "./expression";
 
 export default new Room<ShopState, ShopMutation, ShopExpression>({
     state: ShopState,
-    mutations: ShopMutation,
-    expressions: ShopExpression
+    mutation: ShopMutation,
+    expression: ShopExpression
 })

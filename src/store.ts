@@ -5,9 +5,9 @@ import { getNameAndModule, Observer } from "./utils";
 
 export interface IStore {
     state: any;
-    mutations?: typeof Mutation | any;
-    expressions?: typeof Expression | any;
-    tasks?: typeof Task | any;
+    mutation?: typeof Mutation | {};
+    expression?: typeof Expression | {};
+    task?: typeof Task | {};
     track?: boolean;
 }
 
