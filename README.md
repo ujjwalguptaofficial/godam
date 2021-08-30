@@ -65,7 +65,7 @@ myStore.get('name');
 
 ## Mutation
 
-Mutation can be used to mutate(change) the state value.
+Mutation can be used to mutate(change) the state value. Mutation is always synchronous.
 
 ### Create mutation
 
@@ -177,6 +177,8 @@ class MyExpression extends Expression {
 ## Task
 
 Any logic which requires lots of store manipulation can be created as task. A Task has access to - `state` , `mutation`, `expression`.
+
+Task can be made asychronous by returning promise.
 
 ### Create task
 

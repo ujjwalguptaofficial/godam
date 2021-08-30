@@ -110,18 +110,19 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
         throw `No expression exist with name ${name} ${moduleName ? "" : "& module " + moduleName}`;
     }
 
-    on(key: string, cb: (key, newValue, oldValue) => void) {
+    private on(key: string, cb: (key, newValue, oldValue) => void) {
         this.__watchBus__.on(key, cb);
         return this;
     }
 
-    off(key: string, cb?: (key, newValue, oldValue) => void) {
+    private off(key: string, cb?: (key, newValue, oldValue) => void) {
         this.__watchBus__.off(key, cb);
         return this;
     }
 
     watch(propName: keyof T_STATE, cb: (newValue, oldValue) => void);
     watch(propName: string, cb: (newValue, oldValue) => void);
+    watch(propName: string, cb: Function);
     watch(propName: any, cb: (newValue, oldValue) => void) {
         return this.on(propName, cb);
     }
