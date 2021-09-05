@@ -1,6 +1,6 @@
 # Introduction
 
-This is an example of using godam with typescript.
+This is an example of using godam with javascript.
 
 # How to run
 
