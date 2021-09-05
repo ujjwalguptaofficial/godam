@@ -1,3 +1,6 @@
+[![TEST](https://github.com/ujjwalguptaofficial/godam/actions/workflows/test.yml/badge.svg)](https://github.com/ujjwalguptaofficial/godam/actions/workflows/test.yml)
+[![npm version](https://badge.fury.io/js/godam.svg)](https://badge.fury.io/js/godam)
+
 # godam
 
 Modular & reactive state management framework.
