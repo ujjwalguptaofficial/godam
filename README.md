@@ -65,7 +65,7 @@ myStore.get('name');
 
 ## Mutation
 
-Mutation can be used to mutate(change) the state value. Mutation is always synchronous.
+Mutation can be used to mutate(change) the state value. Mutation is always synchronous and do not return any result.
 
 ### Create mutation
 
@@ -277,5 +277,5 @@ myStore.eval('<expression name>@<room>');
 #### Task
 
 ```
-myStore.eval('<task name>@<room>');
+myStore.do('<task name>@<room>');
 ```
