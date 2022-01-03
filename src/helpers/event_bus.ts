@@ -18,6 +18,15 @@ export class EventBus {
         return this;
     }
 
+    once(event: string, cb: Function) {
+        const onceCb = (...params) => {
+            cb(...params);
+            this.off(event, onceCb);
+        };
+        this.on(event, onceCb);
+        return this;
+    }
+
     off(event: string, cb: Function) {
         if (this._events[event]) {
             if (cb) {
