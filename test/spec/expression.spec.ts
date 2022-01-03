@@ -72,4 +72,11 @@ describe("Expression value", () => {
             profile.set("setAddress", "Earth");
         });
     })
+
+    it('check for shouldCallExpression', () => {
+        expect(store.eval('fullName@profile')).to.be.an('string');
+        store.shouldCallExpression = false;
+        expect(store.eval('fullName@profile')).to.be.an('function');
+        store.shouldCallExpression = true;
+    })
 })

@@ -24,6 +24,8 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
 
     track: boolean;
 
+    shouldCallExpression = true;
+
     constructor(store: IStore, rooms?: { [key: string]: Room }) {
         if (this.track == null) {
             this.track = Godam.track;
@@ -102,7 +104,7 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
         // const ctx = this.__getCtx__("__expression__", moduleName);
         if (name in expression) {
             const value = room['__computed__'][name] || expression[name];
-            if (value && value.call) {
+            if (this.shouldCallExpression && value && value.call) {
                 return value.call(expression, payload);
             }
             return value;
