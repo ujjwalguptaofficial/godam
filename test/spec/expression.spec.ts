@@ -74,9 +74,12 @@ describe("Expression value", () => {
     })
 
     it('check for shouldCallExpression', () => {
-        expect(store.eval('fullName@profile')).to.be.an('string');
+        const fullName = store.eval('fullName@profile');
+        expect(fullName).to.be.an('string');
         store.shouldCallExpression = false;
-        expect(store.eval('fullName@profile')).to.be.an('function');
+        const fn = store.eval('fullName@profile');
+        expect(fn).to.be.an('function');
+        expect(fn()).equal(fullName);
         store.shouldCallExpression = true;
     })
 })

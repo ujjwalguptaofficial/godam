@@ -4,6 +4,8 @@ src
 test
 build
 build_helper
+webpack
+*.github
 
 #definition
 !dist/src

@@ -104,8 +104,13 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
         // const ctx = this.__getCtx__("__expression__", moduleName);
         if (name in expression) {
             const value = room['__computed__'][name] || expression[name];
-            if (this.shouldCallExpression && value && value.call) {
-                return value.call(expression, payload);
+            if (value && value.call) {
+                if (this.shouldCallExpression) {
+                    return value.call(expression, payload);
+                }
+                else {
+                    return value.bind(expression);
+                }
             }
             return value;
         }
