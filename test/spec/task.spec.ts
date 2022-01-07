@@ -1,7 +1,7 @@
 import { store } from "../src";
 import { expect } from "chai";
 
-describe("Action value", () => {
+describe("Task value", () => {
     it("reset root state & check", () => {
         store.set("reset");
         expect(store.get("appName")).equal("Godam");
