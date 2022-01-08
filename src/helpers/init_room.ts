@@ -47,9 +47,11 @@ export function initRoom(this: Room, store: IStore, onWatchBusInit: Function) {
             for (const key in computed) {
                 const data = computed[key];
                 const setComputedValue = () => {
-                    Observer.shouldRegisterChild = false;
+                    // Observer.shouldRegisterChild = false;
+                    const oldValue = this['__computed__'][key];
                     this['__computed__'][key] = data.fn.call(expression);
-                    Observer.shouldRegisterChild = true;
+                    // Observer.shouldRegisterChild = true;
+                    this['__onChange__'].call(this, `expression.${key}`, this['__computed__'][key], oldValue);
                 }
                 setComputedValue();
                 data.args.forEach(arg => {
@@ -66,10 +68,10 @@ export function initRoom(this: Room, store: IStore, onWatchBusInit: Function) {
                     });
                 })
             }
-            const ob = new Observer((key, newValue, oldValue) => {
-                this['__onChange__'].call(this, `expression.${key}`, newValue, oldValue);
-            });
-            ob.create(this['__computed__']);
+            // const ob = new Observer((key, newValue, oldValue) => {
+            //     this['__onChange__'].call(this, `expression.${key}`, newValue, oldValue);
+            // });
+            // ob.create(this['__computed__']);
         }
     }
 }

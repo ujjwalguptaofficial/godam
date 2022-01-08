@@ -54,9 +54,9 @@ export class Observer {
                     cached[key] = newValue;
 
                     onChange(prefix + key, newValue, oldValue);
-                    if (Observer.shouldRegisterChild) {
+                    // if (Observer.shouldRegisterChild) {
                         registerChild();
-                    }
+                    // }
                 },
                 get() {
                     return cached[key];
@@ -100,6 +100,6 @@ export class Observer {
         this.onChange = null;
     }
 
-    static shouldRegisterChild = true;
+    // static shouldRegisterChild = true;
 }
 
