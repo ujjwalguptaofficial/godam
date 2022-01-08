@@ -114,7 +114,7 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
             }
             return value;
         }
-        throw `No expression exist with name ${name} ${moduleName ? "" : "& module " + moduleName}`;
+        throw `No expression exist with name ${name} ${moduleName ? "& module " + moduleName : ""}`.trim();
     }
 
     private on(key: string, cb: (key, newValue, oldValue) => void) {

@@ -6,6 +6,7 @@ build
 build_helper
 webpack
 *.github
+examples
 
 #definition
 !dist/src

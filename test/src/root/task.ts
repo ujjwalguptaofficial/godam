@@ -10,4 +10,9 @@ export class RootTask extends Task<RootState, RootMutation> {
             this.set("setIsAuthenticated", isAuthenticated);
         }
     }
+
+    mutatePayload(payload) {
+        payload.fruit = "mango";
+        return payload;
+    }
 }

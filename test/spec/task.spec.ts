@@ -21,6 +21,7 @@ describe("Task value", () => {
         store.set("reset");
         store.do("getConfig", true);
         expect(store.get("isAuthenticated")).equal(true);
+
     })
 
     it("save profile", () => {
@@ -49,5 +50,14 @@ describe("Task value", () => {
         } catch (error) {
             expect(error).equal(`No task exist with name addStudent & module profile`);
         }
+    })
+
+    it('mutatePayload', () => {
+        const payload = {
+            name: 'ujjwal'
+        }
+        const result = store.do('mutatePayload', payload);
+        expect(Object.keys(payload)).deep.equal(['name']);
+        expect(Object.keys(result)).deep.equal(['name', 'fruit']);
     })
 })

@@ -7,4 +7,10 @@ export class ShopExpression extends Expression<ShopState> {
     get productsCount() {
         return this.get('products').length;
     }
+
+    @Computed('products')
+    get lastProduct() {
+        const products = this.get('products');
+        return products[products.length - 1];
+    }
 }

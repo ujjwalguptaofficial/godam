@@ -82,4 +82,31 @@ describe("Expression value", () => {
         expect(fn()).equal(fullName);
         store.shouldCallExpression = true;
     })
+
+    it('mutatePayload', () => {
+        const payload = {
+            name: 'ujjwal'
+        }
+        const result = store.eval('withObjectPayload', payload);
+        expect(Object.keys(payload)).deep.equal(['name']);
+        expect(Object.keys(result)).deep.equal(['name', 'fruit']);
+    })
+
+    it('call invalid expression', () => {
+        try {
+            store.eval("invalidExpression");
+            throw new Error("Should have been error")
+        } catch (error) {
+            expect(error).equal(`No expression exist with name invalidExpression`);
+        }
+    })
+
+    it('call invalid task with module', () => {
+        try {
+            store.eval("invalidExpression@profile");
+            throw new Error("Should have been error")
+        } catch (error) {
+            expect(error).equal(`No expression exist with name invalidExpression & module profile`);
+        }
+    })
 })

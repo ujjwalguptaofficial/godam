@@ -16,4 +16,9 @@ export class RootExpression extends Expression<RootState> {
     errorWithoutGet() {
         return this.get("errMessage");
     }
+
+    withObjectPayload(payload) {
+        payload.fruit = "mango";
+        return payload;
+    }
 }
