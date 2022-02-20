@@ -1,7 +1,7 @@
 import { store } from "../src";
 import { expect } from "chai";
 
-describe("State value", () => {
+describe("Mutation", () => {
     it("set in root state", () => {
         const promise = new Promise<void>((res) => {
             store.watch("isAuthenticated", (newValue, oldValue) => {

@@ -1,14 +1,15 @@
 import { Room, Mutation } from "../abstracts";
 import { IStore } from "../store";
-import { Observer, isArray } from "../utils";
+import { isArray } from "../utils";
 import { EventBus } from "./event_bus";
+import { Observer } from "./observer";
 export function initRoom(this: Room, store: IStore, onWatchBusInit: Function) {
 
     this['__state__'] = typeof store.state === 'function' ? new store.state() : store.state;
 
     let mutations = store.mutation;
     mutations = mutations ? new (store as any).mutation() : {} as any;
-    (mutations as Mutation)['state'] = this['__state__'];
+
     this['__mutation__'] = mutations as any;
 
     let expression = store.expression || {};
@@ -35,13 +36,15 @@ export function initRoom(this: Room, store: IStore, onWatchBusInit: Function) {
     }
     this['__computed__'] = {};
 
+    let proxyState;
+
     if (store.track !== false) {
         const expression = this['__expression__'];
         const computed = expression['__computed__'];
 
         this['__ob__'] = new Observer(this['__onChange__'].bind(this));
         const state = this['__state__'];
-        this['__ob__'].create(state);
+        proxyState = this['__ob__'].create(state);
 
         if (computed) {
             for (const key in computed) {
@@ -58,7 +61,7 @@ export function initRoom(this: Room, store: IStore, onWatchBusInit: Function) {
                     let toWatch = [arg];
                     if (isArray(state[arg])) {
                         toWatch = toWatch.concat(
-                            ['push', 'pop', 'splice'].map(methodName => {
+                            ['push', 'pop', 'splice', 'shift', 'unshit', 'reverse'].map(methodName => {
                                 return `${arg}.${methodName}`
                             })
                         )
@@ -74,4 +77,9 @@ export function initRoom(this: Room, store: IStore, onWatchBusInit: Function) {
             // ob.create(this['__computed__']);
         }
     }
+    else {
+        proxyState = this['__state__'];
+    }
+    (mutations as Mutation).state = proxyState;
+
 }

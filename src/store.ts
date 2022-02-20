@@ -1,7 +1,8 @@
 import { Mutation, Task, Expression, Room } from "./abstracts";
 import { EventBus, initRoom } from "./helpers";
 import { IGodamRoom } from "./interfaces";
-import { getNameAndModule, Observer, clone } from "./utils";
+import { getNameAndModule, clone } from "./utils";
+import { Observer, } from "./helpers";
 
 export interface IStore {
     state: any;
