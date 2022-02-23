@@ -1,6 +1,6 @@
 {
   "name": "godam",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Modular & reactive state management framework",
   "main": "dist/npm.export.js",
   "types": "dist/ts/index.d.ts",
@@ -20,7 +20,7 @@
     "absoluteUrl": "https://github.com/ujjwalguptaofficial/godam"
   },
   "author": "Ujjwal Gupta",
-  "license": "ISC",
+  "license": "APACHE 2.0",
   "bugs": {
     "url": "https://github.com/ujjwalguptaofficial/godam/issues"
   },
