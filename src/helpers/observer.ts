@@ -109,12 +109,8 @@ export class Observer {
                             onChange(`${prefix}update`, [prop, newValue]);
                         }
                     } else {
-                        const length = getObjectLength(target);
-                        onChange(`${prefix}push`, {
-                            value: newValue,
-                            key: prop,
-                            length: length
-                        });
+                        // const length = getObjectLength(target);
+                        onChange(`${prefix}push`, newValue);
                     }
 
                     return isValueSetted;
