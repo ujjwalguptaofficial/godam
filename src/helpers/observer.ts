@@ -41,11 +41,7 @@ export class Observer {
                                 onChange(prefix + prop, (() => {
                                     switch (prop) {
                                         case 'push':
-                                            return {
-                                                value: args[0],
-                                                key: result - 1,
-                                                length: result
-                                            };
+                                            return args;
                                         case 'pop':
                                             return (target as any).length;
                                         case 'reverse':
