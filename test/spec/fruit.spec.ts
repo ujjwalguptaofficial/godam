@@ -28,6 +28,22 @@ describe("Fruit", () => {
         return promise;
     })
 
+    it("push value", async function () {
+        store.set('initializeFruits@fruit');
+        const promise = new Promise<void>((res) => {
+            store.watch("items.push@fruit", (newValue) => {
+                expect(newValue).eql(['amrud', 'ddd']);
+                res();
+                store.unwatch("items.push@fruit");
+            });
+        })
+        store.get('items@fruit').push('amrud', 'ddd');
+        const fruits = clone(store.get('initialFruits@fruit'));
+        fruits.push('amrud', 'ddd');
+        checkFruitValue(fruits);
+        return promise;
+    })
+
     it("splice value by 0,1", async function () {
         store.set('initializeFruits@fruit');
         const promise = new Promise<void>((res) => {
@@ -120,7 +136,6 @@ describe("Fruit", () => {
         store.get('items@fruit').unshift('amrud');
         const fruits = clone(store.get('initialFruits@fruit'));
         fruits.unshift('amrud')
-        debugger;
         checkFruitValue(fruits);
         return promise;
     })

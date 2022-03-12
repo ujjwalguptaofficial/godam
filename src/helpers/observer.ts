@@ -46,7 +46,7 @@ export class Observer {
                 },
                 set: (target, prop: string, newValue, receiver) => {
                     const setValue = Reflect.set(target, prop, newValue, receiver);
-                    onChange(`${prefix}update`, [Number(prop), newValue]);
+                    onChange(`${prefix}update`, { key: Number(prop), value: newValue });
                     return setValue;
                 }
             });
@@ -57,7 +57,7 @@ export class Observer {
                 const index = indexOf(target, prop);
                 const noOfItemToDelete = 1;
                 const isValueDeleted = Reflect.deleteProperty(target, prop);
-                onChange(`${prefix}splice`, [index, noOfItemToDelete]);
+                onChange(`${prefix}delete`, [index, noOfItemToDelete]);
                 return isValueDeleted;
             },
             set: (target, prop: string, newValue, receiver) => {
@@ -86,14 +86,12 @@ export class Observer {
                     isValueSetted = setValue();
                     if (oldValue != null) {
                         if (target.hasOwnProperty(prop)) {
-                            onChange(`${prefix}update`, [prop, newValue]);
+                            onChange(`${prefix}update`, { key: prop, value: newValue });
                         }
                     } else {
-                        const length = getObjectLength(target);
-                        onChange(`${prefix}push`, {
+                        onChange(`${prefix}add`, {
                             value: newValue,
                             key: prop,
-                            length: length
                         });
                     }
 

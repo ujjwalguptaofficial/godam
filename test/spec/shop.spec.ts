@@ -8,14 +8,6 @@ describe("Expression value", () => {
 
 
         return new Promise<void>((res) => {
-            // expect(store.eval("rootError")).equal(null);
-            store.watch('expression.productsCount@shop', (newValue, oldValue) => {
-                expect(newValue).equal(1);
-                expect(oldValue).equal(0);
-                expect(store.eval("productsCount@shop")).equal(1);
-                store.unwatch('expression.productsCount@shop');
-                res();
-            })
             const value = {
                 id: 1,
                 name: 'Jeans',
@@ -23,7 +15,38 @@ describe("Expression value", () => {
                 total: 50,
                 price: 1000
             };
+            store.watch('expression.productsCount@shop', (newValue, oldValue) => {
+                expect(newValue).equal(1);
+                expect(oldValue).equal(0);
+                expect(store.eval("productsCount@shop")).equal(1);
+                expect(store.get("products@shop")[0]).eql(value);
+                store.unwatch('expression.productsCount@shop');
+                res();
+            })
             store.set("addProduct@shop", value);
+        });
+    });
+
+    it("update products", () => {
+
+        return new Promise<void>((res) => {
+            // expect(store.eval("rootError")).equal(null);
+            const value = {
+                id: 1,
+                name: 'Shirt',
+                category: 'cloth',
+                total: 150,
+                price: 2000
+            };
+            store.watch('expression.productsCount@shop', (newValue, oldValue) => {
+                expect(newValue).equal(1);
+                expect(oldValue).equal(1);
+                expect(store.eval("productsCount@shop")).equal(1);
+                expect(store.get("products@shop")[0]).eql(value);
+                store.unwatch('expression.productsCount@shop');
+                res();
+            });
+            store.set("updateProduct@shop", value);
         });
     });
 

@@ -61,7 +61,7 @@ export function initRoom(this: Room, store: IStore, onWatchBusInit: Function) {
                     let toWatch = [arg];
                     if (isArray(state[arg])) {
                         toWatch = toWatch.concat(
-                            ['push', 'pop', 'splice', 'shift', 'unshift', 'reverse'].map(methodName => {
+                            ['push', 'pop', 'splice', 'shift', 'unshift', 'reverse', 'update'].map(methodName => {
                                 return `${arg}.${methodName}`
                             })
                         )
