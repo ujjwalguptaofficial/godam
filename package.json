@@ -1,6 +1,6 @@
 {
   "name": "godam",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Modular & reactive state management framework",
   "main": "dist/npm.export.js",
   "types": "dist/ts/index.d.ts",
@@ -12,8 +12,9 @@
     "test": "cd test && npm run test",
     "build:test": "npm run build:pack && npm run install:test",
     "install:test": "cd test && npm run install:test",
-    "deploy": "npm run build:test && npm run webpack:prod",
-    "prepublishOnly": "npm run deploy"
+    "deploy": "npm run clean && npm run build:test && npm run webpack:prod",
+    "prepublishOnly": "npm run deploy",
+    "clean": "del dist"
   },
   "repository": {
     "type": "git",
@@ -30,6 +31,7 @@
     "@types/node": "^14.14.37",
     "copy-webpack-plugin": "^6.1.1",
     "cross-env": "^7.0.3",
+    "del-cli": "^4.0.1",
     "smart-banner-webpack-plugin": "^3.0.1",
     "ts-loader": "^8.1.0",
     "typescript": "^4.2.4",

@@ -38,23 +38,7 @@ export class Observer {
                         case 'reverse':
                             return (...args) => {
                                 const result = target[prop](...args);
-                                onChange(prefix + prop, (() => {
-                                    switch (prop) {
-                                        case 'push':
-                                            return args;
-                                        case 'pop':
-                                            return (target as any).length;
-                                        case 'reverse':
-                                            return {
-                                                length: (target as any).length,
-                                                value: result
-                                            };
-                                        // case 'unshift':
-                                        //     return 0;
-                                        default:
-                                            return args;
-                                    }
-                                })());
+                                onChange(prefix + prop, args);
                                 return result;
                             };
                     }

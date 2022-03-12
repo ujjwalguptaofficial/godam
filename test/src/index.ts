@@ -3,11 +3,13 @@ import { Godam } from "godam";
 import profileStore from "./profile";
 import Account from "./account";
 import Shop from "./shop";
+import Fruit from "./fruit";
 
 const rooms = {
     profile: profileStore,
     account: Account,
-    shop: Shop
+    shop: Shop,
+    fruit: Fruit
 }
 
 export const store = new Godam<RootState, RootMutation, RootExpression, RootTask>({

@@ -39,7 +39,7 @@ describe("Expression value", () => {
         expect(profile.eval("address")).equal("My address is India");
 
         expect(profile.eval("addressTextCounter")).equal(1);
-        return new Promise((res) => {
+        return new Promise<void>((res) => {
             profile.watch('expression.address', (newValue, oldValue) => {
                 expect(newValue).equal("My address is Earth");
                 expect(oldValue).equal("My address is India");
@@ -62,13 +62,13 @@ describe("Expression value", () => {
                     expect(newValue).equal("My address is Earth");
                     expect(oldValue).equal("My address is India");
                     setTimeout(() => {
-                        store.off('change');
+                        store['off']('change');
                         res();
                     }, 500)
                 }
                 ++changeCount;
             };
-            store.on('change', onChange);
+            store['on']('change', onChange);
             profile.set("setAddress", "Earth");
         });
     })

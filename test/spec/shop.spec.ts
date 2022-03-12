@@ -7,7 +7,7 @@ describe("Expression value", () => {
         expect(store.eval("productsCount@shop")).equal(0);
 
 
-        return new Promise((res) => {
+        return new Promise<void>((res) => {
             // expect(store.eval("rootError")).equal(null);
             store.watch('expression.productsCount@shop', (newValue, oldValue) => {
                 expect(newValue).equal(1);

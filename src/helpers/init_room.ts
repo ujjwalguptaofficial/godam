@@ -7,8 +7,8 @@ export function initRoom(this: Room, store: IStore, onWatchBusInit: Function) {
 
     this['__state__'] = typeof store.state === 'function' ? new store.state() : store.state;
 
-    let mutations = store.mutation;
-    mutations = mutations ? new (store as any).mutation() : {} as any;
+    let mutations = store.mutation || {};
+    mutations = typeof mutations === 'function' ? new (store as any).mutation() : mutations;
 
     this['__mutation__'] = mutations as any;
 
@@ -61,7 +61,7 @@ export function initRoom(this: Room, store: IStore, onWatchBusInit: Function) {
                     let toWatch = [arg];
                     if (isArray(state[arg])) {
                         toWatch = toWatch.concat(
-                            ['push', 'pop', 'splice', 'shift', 'unshit', 'reverse'].map(methodName => {
+                            ['push', 'pop', 'splice', 'shift', 'unshift', 'reverse'].map(methodName => {
                                 return `${arg}.${methodName}`
                             })
                         )
