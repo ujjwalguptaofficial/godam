@@ -7,3 +7,4 @@ import "./task.spec";
 import "./expression.spec";
 import "./shop.spec";
 import "./fruit.spec";
+import "./veggie.spec";

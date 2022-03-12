@@ -1,6 +1,6 @@
 import { Room, Mutation } from "../abstracts";
 import { IStore } from "../store";
-import { isArray } from "../utils";
+import { isArray, isObject } from "../utils";
 import { EventBus } from "./event_bus";
 import { Observer } from "./observer";
 export function initRoom(this: Room, store: IStore, onWatchBusInit: Function) {
@@ -59,13 +59,23 @@ export function initRoom(this: Room, store: IStore, onWatchBusInit: Function) {
                 setComputedValue();
                 data.args.forEach(arg => {
                     let toWatch = [arg];
-                    if (isArray(state[arg])) {
-                        toWatch = toWatch.concat(
-                            ['push', 'pop', 'splice', 'shift', 'unshift', 'reverse', 'update'].map(methodName => {
-                                return `${arg}.${methodName}`
-                            })
-                        )
+                    if (isObject(state[arg])) {
+                        if (isArray(state[arg])) {
+                            toWatch = toWatch.concat(
+                                ['push', 'pop', 'splice', 'shift', 'unshift', 'reverse', 'update'].map(methodName => {
+                                    return `${arg}.${methodName}`
+                                })
+                            )
+                        }
+                        else {
+                            toWatch = toWatch.concat(
+                                ['add', 'update', 'delete'].map(methodName => {
+                                    return `${arg}.${methodName}`
+                                })
+                            )
+                        }
                     }
+
                     toWatch.forEach(item => {
                         this.watch(item, setComputedValue);
                     });

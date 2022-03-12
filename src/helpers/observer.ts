@@ -55,9 +55,8 @@ export class Observer {
         const proxy = new Proxy(input, {
             deleteProperty(target, prop) {
                 const index = indexOf(target, prop);
-                const noOfItemToDelete = 1;
                 const isValueDeleted = Reflect.deleteProperty(target, prop);
-                onChange(`${prefix}delete`, [index, noOfItemToDelete]);
+                onChange(`${prefix}delete`, { key: prop, index });
                 return isValueDeleted;
             },
             set: (target, prop: string, newValue, receiver) => {
