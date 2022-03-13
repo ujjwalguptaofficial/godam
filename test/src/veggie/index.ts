@@ -8,7 +8,7 @@ class VeggieExpression extends Expression {
 
     @Computed('items')
     get veggieArray() {
-        return Object.keys(this.get('items'));
+        return Object.values(this.get('items'));
     }
 }
 export default new Room({

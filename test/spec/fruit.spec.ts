@@ -13,13 +13,13 @@ describe("Fruit", () => {
     it("initialize fruits", () => {
 
         const promise = new Promise<void>((res) => {
-            store.watch("items@fruit", (newValue, oldValue) => {
-                console.log("new value", newValue);
+            const cb = (newValue, oldValue) => {
                 expect(newValue).eql(store.get('initialFruits@fruit'));
                 expect(oldValue).eql([]);
                 res();
-                store.unwatch("items@fruit");
-            });
+                store.unwatch("items@fruit", cb);
+            };
+            store.watch("items@fruit", cb);
         })
         store.set('initializeFruits@fruit');
         checkFruitValue(
@@ -31,11 +31,12 @@ describe("Fruit", () => {
     it("push value", async function () {
         store.set('initializeFruits@fruit');
         const promise = new Promise<void>((res) => {
-            store.watch("items.push@fruit", (newValue) => {
+            const cb = (newValue) => {
                 expect(newValue).eql(['amrud', 'ddd']);
                 res();
-                store.unwatch("items.push@fruit");
-            });
+                store.unwatch("items.push@fruit", cb);
+            };
+            store.watch("items.push@fruit", cb);
         })
         store.get('items@fruit').push('amrud', 'ddd');
         const fruits = clone(store.get('initialFruits@fruit'));
@@ -47,12 +48,13 @@ describe("Fruit", () => {
     it("update value", async function () {
         store.set('initializeFruits@fruit');
         const promise = new Promise<void>((res) => {
-            store.watch("items.update@fruit", (newValue) => {
+            const cb = (newValue) => {
                 expect(newValue).eql({ key: 0, value: 'amrud' });
                 checkFruitValue(fruits);
-                store.unwatch("items.update@fruit");
+                store.unwatch("items.update@fruit", cb);
                 res();
-            });
+            };
+            store.watch("items.update@fruit", cb);
         })
         const fruits = clone(store.get('initialFruits@fruit'));
         fruits[0] = 'amrud';
@@ -63,11 +65,12 @@ describe("Fruit", () => {
     it("splice value by 0,1", async function () {
         store.set('initializeFruits@fruit');
         const promise = new Promise<void>((res) => {
-            store.watch("items.splice@fruit", (newValue) => {
+            const cb = (newValue) => {
                 expect(newValue).eql([0, 1]);
                 res();
-                store.unwatch("items.splice@fruit");
-            });
+                store.unwatch("items.splice@fruit", cb);
+            };
+            store.watch("items.splice@fruit", cb);
         })
         store.get('items@fruit').splice(0, 1);
         const fruits = clone(store.get('initialFruits@fruit'));
@@ -79,11 +82,12 @@ describe("Fruit", () => {
     it("splice value by 2,1", async function () {
         store.set('initializeFruits@fruit');
         const promise = new Promise<void>((res) => {
-            store.watch("items.splice@fruit", (newValue) => {
+            const cb = (newValue) => {
                 expect(newValue).eql([2, 1]);
                 res();
-                store.unwatch("items.splice@fruit");
-            });
+                store.unwatch("items.splice@fruit", cb);
+            };
+            store.watch("items.splice@fruit", cb);
         })
         store.get('items@fruit').splice(2, 1);
         const fruits = clone(store.get('initialFruits@fruit'));
@@ -95,11 +99,12 @@ describe("Fruit", () => {
     it('splice value by 2,2,"Lemon", "Kiwi" ', async function () {
         store.set('initializeFruits@fruit');
         const promise = new Promise<void>((res) => {
-            store.watch("items.splice@fruit", (newValue) => {
+            const cb = (newValue) => {
                 expect(newValue).eql([2, 2, "Lemon", "Kiwi"]);
                 res();
-                store.unwatch("items.splice@fruit");
-            });
+                store.unwatch("items.splice@fruit", cb);
+            };
+            store.watch("items.splice@fruit", cb);
         })
         store.get('items@fruit').splice(2, 2, "Lemon", "Kiwi");
         const fruits = clone(store.get('initialFruits@fruit'));
@@ -111,11 +116,12 @@ describe("Fruit", () => {
     it('pop', async function () {
         store.set('initializeFruits@fruit');
         const promise = new Promise<void>((res) => {
-            store.watch("items.pop@fruit", (newValue) => {
+            const cb = (newValue) => {
                 expect(newValue).eql([]);
                 res();
-                store.unwatch("items.pop@fruit");
-            });
+                store.unwatch("items.pop@fruit", cb);
+            };
+            store.watch("items.pop@fruit", cb);
         })
         store.get('items@fruit').pop();
         const fruits = clone(store.get('initialFruits@fruit'));
@@ -127,11 +133,12 @@ describe("Fruit", () => {
     it('shift', async function () {
         store.set('initializeFruits@fruit');
         const promise = new Promise<void>((res) => {
-            store.watch("items.shift@fruit", (newValue) => {
+            const cb = (newValue) => {
                 expect(newValue).eql([]);
                 res();
-                store.unwatch("items.shift@fruit");
-            });
+                store.unwatch("items.shift@fruit", cb);
+            };
+            store.watch("items.shift@fruit", cb);
         })
         store.get('items@fruit').shift();
         const fruits = clone(store.get('initialFruits@fruit'));
@@ -143,11 +150,12 @@ describe("Fruit", () => {
     it('unshift', async function () {
         store.set('initializeFruits@fruit');
         const promise = new Promise<void>((res) => {
-            store.watch("items.unshift@fruit", (newValue) => {
+            const cb = (newValue) => {
                 expect(newValue).eql(['amrud']);
                 res();
-                store.unwatch("items.unshift@fruit");
-            });
+                store.unwatch("items.unshift@fruit", cb);
+            };
+            store.watch("items.unshift@fruit", cb);
         })
         store.get('items@fruit').unshift('amrud');
         const fruits = clone(store.get('initialFruits@fruit'));
@@ -159,11 +167,12 @@ describe("Fruit", () => {
     it('reverse', async function () {
         store.set('initializeFruits@fruit');
         const promise = new Promise<void>((res) => {
-            store.watch("items.reverse@fruit", (newValue) => {
+            const cb = (newValue) => {
                 expect(newValue).eql([]);
                 res();
-                store.unwatch("items.reverse@fruit");
-            });
+                store.unwatch("items.reverse@fruit", cb);
+            };
+            store.watch("items.reverse@fruit", cb);
         })
         store.get('items@fruit').reverse();
         const fruits = clone(store.get('initialFruits@fruit'));

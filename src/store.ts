@@ -136,10 +136,10 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
     }
 
 
-    unwatch(propName: keyof T_STATE, cb?: (newValue, oldValue) => void)
-    unwatch(propName: string, cb?: (newValue, oldValue) => void)
-    unwatch(propName: any, cb?: (newValue, oldValue) => void) {
-        return this.off(propName, cb);
+    unwatch(propName: keyof T_STATE, cb: Function)
+    unwatch(propName: string, cb: Function)
+    unwatch(propName: any, cb: Function) {
+        return this.off(propName, cb as any);
     }
 
     private __onChange__(key, newValue, oldValue) {

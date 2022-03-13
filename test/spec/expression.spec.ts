@@ -62,7 +62,7 @@ describe("Expression value", () => {
                     expect(newValue).equal("My address is Earth");
                     expect(oldValue).equal("My address is India");
                     setTimeout(() => {
-                        store['off']('change');
+                        store['off']('change', onChange);
                         res();
                     }, 500)
                 }

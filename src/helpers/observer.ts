@@ -77,7 +77,11 @@ export class Observer {
 
                 if (hashkeys[prop]) {
                     isValueSetted = setValue();
-                    onChange(prefix + (prop as string), newValue, oldValue);
+                    const propWithPrefix = prefix + (prop as string);
+                    onChange(propWithPrefix, newValue, oldValue);
+                    if (prefix) {
+                        onChange(`${prefix}update`, { key: prop, value: newValue });
+                    }
                     return isValueSetted;
                 }
 

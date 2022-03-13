@@ -49,7 +49,8 @@ export function initRoom(this: Room, store: IStore, onWatchBusInit: Function) {
         if (computed) {
             for (const key in computed) {
                 const data = computed[key];
-                const setComputedValue = () => {
+                const setComputedValue = (...args) => {
+                    const argValue = args;
                     // Observer.shouldRegisterChild = false;
                     const oldValue = this['__computed__'][key];
                     this['__computed__'][key] = data.fn.call(expression);
@@ -77,7 +78,10 @@ export function initRoom(this: Room, store: IStore, onWatchBusInit: Function) {
                     }
 
                     toWatch.forEach(item => {
-                        this.watch(item, setComputedValue);
+                        this.watch(item, (...args) => {
+                            const key = item;
+                            setComputedValue();
+                        });
                     });
                 })
             }

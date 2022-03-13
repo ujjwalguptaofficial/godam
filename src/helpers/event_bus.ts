@@ -34,7 +34,10 @@ export class EventBus {
                 this._events[event].splice(index, 1);
             }
             else {
-                this._events[event] = [];
+                if (process.env.NODE_ENV !== 'production') {
+                    throw "no callback method provided";
+                }
+                // this._events[event] = [];
             }
         }
     }

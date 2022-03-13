@@ -4,18 +4,20 @@ import { expect } from "chai";
 describe("Mutation", () => {
     it("set in root state", () => {
         const promise = new Promise<void>((res) => {
-            store.watch("isAuthenticated", (newValue, oldValue) => {
+            const cbIsAuthenticated = (newValue, oldValue) => {
                 expect(newValue).equal(true);
                 expect(oldValue).equal(false);
-            });
-            store.watch("isConfigLoaded", (newValue, oldValue) => {
+            };
+            store.watch("isAuthenticated", cbIsAuthenticated);
+            const cbIsConfigLoaded = (newValue, oldValue) => {
                 expect(newValue).equal(true);
                 expect(oldValue).equal(false);
 
-                store.unwatch("isAuthenticated");
-                store.unwatch("isConfigLoaded");
+                store.unwatch("isAuthenticated", cbIsAuthenticated);
+                store.unwatch("isConfigLoaded", cbIsConfigLoaded);
                 res();
-            });
+            };
+            store.watch("isConfigLoaded", cbIsConfigLoaded);
         })
         store.set("setIsAuthenticated", true);
         expect(store.get("isAuthenticated")).equal(true);

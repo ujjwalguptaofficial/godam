@@ -1,7 +1,7 @@
 import { store } from "../src";
 import { expect } from "chai";
 
-describe("Expression value", () => {
+describe("Shop", () => {
 
     it("add products", () => {
         expect(store.eval("productsCount@shop")).equal(0);
@@ -15,14 +15,15 @@ describe("Expression value", () => {
                 total: 50,
                 price: 1000
             };
-            store.watch('expression.productsCount@shop', (newValue, oldValue) => {
+            const cb = (newValue, oldValue) => {
                 expect(newValue).equal(1);
                 expect(oldValue).equal(0);
                 expect(store.eval("productsCount@shop")).equal(1);
                 expect(store.get("products@shop")[0]).eql(value);
-                store.unwatch('expression.productsCount@shop');
+                store.unwatch('expression.productsCount@shop', cb);
                 res();
-            })
+            };
+            store.watch('expression.productsCount@shop', cb)
             store.set("addProduct@shop", value);
         });
     });
@@ -38,14 +39,15 @@ describe("Expression value", () => {
                 total: 150,
                 price: 2000
             };
-            store.watch('expression.productsCount@shop', (newValue, oldValue) => {
+            const cb = (newValue, oldValue) => {
                 expect(newValue).equal(1);
                 expect(oldValue).equal(1);
                 expect(store.eval("productsCount@shop")).equal(1);
                 expect(store.get("products@shop")[0]).eql(value);
-                store.unwatch('expression.productsCount@shop');
+                store.unwatch('expression.productsCount@shop', cb);
                 res();
-            });
+            };
+            store.watch('expression.productsCount@shop', cb);
             store.set("updateProduct@shop", value);
         });
     });
@@ -71,13 +73,14 @@ describe("Expression value", () => {
         expect(store.eval("productsCount@shop")).equal(1);
         return new Promise<void>((res) => {
             // expect(store.eval("rootError")).equal(null);
-            store.watch('expression.productsCount@shop', (newValue, oldValue) => {
+            const cb = (newValue, oldValue) => {
                 expect(newValue).equal(0);
                 expect(oldValue).equal(1);
                 expect(store.eval("productsCount@shop")).equal(0);
-                store.unwatch('expression.productsCount@shop');
+                store.unwatch('expression.productsCount@shop', cb);
                 res();
-            })
+            };
+            store.watch('expression.productsCount@shop', cb)
             store.set("removeLastProduct@shop");
         });
     });
