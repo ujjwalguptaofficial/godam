@@ -29,22 +29,22 @@ describe("Veggie", () => {
         return promise;
     })
 
-    // it("update pre existing value ", async function () {
-    //     const promise = new Promise<void>((res) => {
-    //         store.watch("items.update@veggie", (newValue) => {
-    //             expect(newValue).eql({ value: 'POTATO', key: 'potato' });
-    //             checkVeggieValue(veggie);
-    //             res();
-    //             store.unwatch("items.update@veggie");
-    //         });
-    //     })
-    //     const veggie = clone(store.get('initialFruits@veggie'));
-    //     veggie['potato'] = 'POTATO';
-    //     const savedVeggie = store.get('items@veggie');
-    //     debugger;
-    //     savedVeggie['potato'] = 'POTATO';
-    //     return promise;
-    // })
+    it("update pre existing value ", async function () {
+        const promise = new Promise<void>((res) => {
+            const cb = (newValue) => {
+                expect(newValue).eql({ value: 'POTATO', key: 'potato' });
+                res();
+                store.unwatch("items.update@veggie", cb);
+            };
+            store.watch("items.update@veggie", cb);
+        })
+        const veggie = clone(store.get('initialFruits@veggie'));
+        veggie['potato'] = 'POTATO';
+        const savedVeggie = store.get('items@veggie');
+        savedVeggie['potato'] = 'POTATO';
+        checkVeggieValue(veggie);
+        return promise;
+    })
 
     it("add value", async function () {
         store.set('initializeFruits@veggie');
