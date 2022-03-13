@@ -26,6 +26,6 @@
     "puppeteer": "^5.5.0"
   },
   "dependencies": {
-    "godam": "file:../godam-1.0.8.tgz"
+    "godam": "file:../godam-1.1.0.tgz"
   }
 }

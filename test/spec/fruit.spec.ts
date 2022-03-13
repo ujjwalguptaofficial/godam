@@ -44,6 +44,22 @@ describe("Fruit", () => {
         return promise;
     })
 
+    it("update value", async function () {
+        store.set('initializeFruits@fruit');
+        const promise = new Promise<void>((res) => {
+            store.watch("items.update@fruit", (newValue) => {
+                expect(newValue).eql({ key: 0, value: 'amrud' });
+                checkFruitValue(fruits);
+                store.unwatch("items.update@fruit");
+                res();
+            });
+        })
+        const fruits = clone(store.get('initialFruits@fruit'));
+        fruits[0] = 'amrud';
+        store.get('items@fruit')[0] = 'amrud';
+        return promise;
+    })
+
     it("splice value by 0,1", async function () {
         store.set('initializeFruits@fruit');
         const promise = new Promise<void>((res) => {
