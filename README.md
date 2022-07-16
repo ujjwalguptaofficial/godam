@@ -25,6 +25,7 @@ We have created official plugin support for below library or frameworks -
 
 * React - https://github.com/ujjwalguptaofficial/godam-react
 * Vue - https://github.com/ujjwalguptaofficial/godam-vue
+* Mahal - https://github.com/ujjwalguptaofficial/mahal-store
 
 # Docs
 
