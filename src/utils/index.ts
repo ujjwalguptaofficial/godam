@@ -5,3 +5,4 @@ export * from "./get_name_and_module";
 export * from "./clone";
 export * from "./merge";
 export * from "./hashify_array";
+export * from "./promise_resolve";

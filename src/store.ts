@@ -41,15 +41,20 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
             const room = rooms[key];
             room['__prefix__'] = key;
             initRoom.call(room, room['__private__'].store, () => {
-                room['__watchBus__'].on("do", (name: string, payload?: any) => {
+                const bus = room['__watchBus__'];
+                bus.on("do", (name: string, payload?: any) => {
                     return this.do(name, payload);
-                }).on("commit", (name: string, payload?: any) => {
+                });
+                bus.on("commit", (name: string, payload?: any) => {
                     return this.set(name, payload);
-                }).on("eval", (name: string, payload?: any) => {
+                });
+                bus.on("eval", (name: string, payload?: any) => {
                     return this.eval(name, payload);
-                }).on("get", (name, roomName) => {
+                });
+                bus.on("get", (name, roomName) => {
                     return this.get(name, roomName);
-                }).on("change", (prop, newVal, oldValue) => {
+                });
+                bus.on("change", (prop, newVal, oldValue) => {
                     return this.__onChange__(`${prop}@${key}`, newVal, oldValue);
                 })
             });

@@ -1,6 +1,7 @@
 // import { describe } from "mocha";
 // import chai from "chai";
 // window['chai'] = chai;
+import "./event_bus.spec";
 import "./state.spec";
 import "./mutation.spec";
 import "./task.spec";

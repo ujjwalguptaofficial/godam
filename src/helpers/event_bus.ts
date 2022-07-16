@@ -1,3 +1,5 @@
+import { promiseResolve } from "../utils";
+
 export class EventBus {
 
     constructor(ctx?) {
@@ -7,15 +9,17 @@ export class EventBus {
     private _ctx;
 
     private _events: {
-        [key: string]: Function[]
+        [key: string]: Map<Function, boolean>
     } = {};
 
     on(event: string, cb: Function) {
-        if (this._events[event] == null) {
-            this._events[event] = [];
+        let events = this._events[event];
+        if (events == null) {
+            events = this._events[event] = new Map();
         }
-        this._events[event].push(cb);
-        return this;
+
+        events.set(cb, true);
+        return cb;
     }
 
     once(event: string, cb: Function) {
@@ -27,66 +31,99 @@ export class EventBus {
         return this;
     }
 
-    off(event: string, cb: Function) {
-        if (this._events[event]) {
-            if (cb) {
-                const index = this._events[event].indexOf(cb);
-                this._events[event].splice(index, 1);
+    off(event: string, eventListener: Function) {
+        if (process.env.NODE_ENV !== 'production') {
+            if (!eventListener) {
+                throw new Error(
+                    `no event listener is provided in event bus 'off' for event ${event}`
+                );
             }
-            else {
-                if (process.env.NODE_ENV !== 'production') {
-                    throw "no callback method provided";
+        }
+        const events = this._events[event];
+        if (events) {
+            if (process.env.NODE_ENV !== 'production') {
+                if (!events.has(eventListener)) {
+                    throw new Error(
+                        `supplied event listener is not found for event '${event}'. Please provide same method which was used to subscribe the event.`
+                    );
                 }
-                // this._events[event] = [];
             }
+            events.delete(eventListener);
+        }
+        else if (process.env.NODE_ENV !== 'production') {
+            throw new Error(
+                `supplied event listener is not found for event '${event}'. Please provide same method which was used to subscribe the event.`
+            );
         }
     }
 
+    eachEvent(events: Map<Function, any>, cb) {
+        const size = events.size;
+        let index = 0;
+        events.forEach((_, listener) => {
+            if (index++ < size) {
+                cb(listener);
+            }
+        });
+    }
+
     emit(event: string, ...args) {
-        const events = this._events[event] || [];
+        const events = this.getEvent(event);
+        if (!events) return promiseResolve<any[]>([]);
+        const promises = [];
+        this.eachEvent(events, (cb) => {
+            const result = cb.call(this._ctx, ...args);
+            promises.push(result);
+        });
         return Promise.all(
-            events.map(cb => {
-                const result = cb.call(this._ctx, ...args);
-                return result && result.then ? result : Promise.resolve(result);
-            })
+            promises
         );
     }
 
     emitSync(event: string, ...args) {
-        const events = this._events[event] || [];
-        return events.map(cb => {
-            return cb.call(this._ctx, ...args);
-        })
+        const events = this.getEvent(event);
+        if (!events) return;
+        const results = [];
+        this.eachEvent(events, (cb) => {
+            const result = cb.call(this._ctx, ...args);
+            results.push(result);
+        });
+        return results;
     }
 
     emitLinear(event: string, ...args) {
-        const events = this._events[event] || [];
-        let index = 0;
-        let length = events.length;
+        const storedEvents = this.getEvent(event);
+        if (!storedEvents) return promiseResolve<any[]>([]);
+        const events = new Map(storedEvents);
         const results = [];
-        const callMethod = () => {
-            const eventCb = events[index++];
-            if (eventCb) {
-                const result = eventCb.call(this._ctx, ...args);
-                return result && result.then ? result : Promise.resolve(result);
-            }
-        }
+        const items = events.entries();
+        const callMethod = (eventCb) => {
+            if (!eventCb) return promiseResolve(null);
+
+            const result = eventCb.call(this._ctx, ...args);
+            return result && result.then ? result : promiseResolve(result);
+
+        };
 
         return new Promise<any[]>((res) => {
             const checkAndCall = () => {
-                if (index < length) {
-                    callMethod().then(result => {
+                const eventCb = items.next();
+                if (!eventCb.done) {
+                    callMethod(eventCb.value[0]).then(result => {
                         results.push(result);
                         checkAndCall();
-                    })
+                    });
                 }
                 else {
                     res(results);
                 }
             };
             checkAndCall();
-        })
+        });
+    }
 
+    getEvent(eventName: string) {
+        return this._events[eventName];
     }
 
     destroy() {
