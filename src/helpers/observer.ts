@@ -1,9 +1,9 @@
-import { isArray, getObjectLength, isObject, merge, hashifyArray } from "../utils";
+import { isArray, isObject, merge, hashifyArray } from "../utils";
 import { indexOf } from "./index_of";
+import { ARRAY_MUTABLE_METHODS } from "../constants";
 
 export class Observer {
 
-    static shouldCheckProp = true;
     onChange: (key: string, newValue, oldValue?) => void;
 
     constructor(onChange) {
@@ -13,12 +13,13 @@ export class Observer {
     create(input: object, keys?: string[], prefix = "") {
         const onChange = this.onChange;
         const isInputArray = isArray(input);
-        keys = keys || (isInputArray ? [] : Object.keys(input));
+        keys = keys || (isInputArray ? ARRAY_MUTABLE_METHODS : Object.keys(input));
         const hashkeys = hashifyArray(keys);
         const registerChild = (key, newValue, oldValue) => {
             const objectValKeyWithPrefix = `${prefix}${key}.`;
             if (oldValue != null) {
-                const mergedNewValue = merge(oldValue, newValue || {});
+                newValue = newValue || {};
+                const mergedNewValue = merge(oldValue, newValue);
                 for (const valKey in mergedNewValue) {
                     onChange(`${objectValKeyWithPrefix}${valKey}`, mergedNewValue[valKey], oldValue[valKey]);
                 }
@@ -29,18 +30,12 @@ export class Observer {
         if (isInputArray) {
             const arrProxy = new Proxy(input, {
                 get(target, prop, receiver) {
-                    switch (prop) {
-                        case 'push':
-                        case 'splice':
-                        case 'pop':
-                        case 'shift':
-                        case 'unshift':
-                        case 'reverse':
-                            return (...args) => {
-                                const result = target[prop](...args);
-                                onChange(prefix + prop, args);
-                                return result;
-                            };
+                    if (hashkeys[prop]) {
+                        return (...args) => {
+                            const result = target[prop](...args);
+                            onChange(prefix + (prop as string), args);
+                            return result;
+                        };
                     }
                     return Reflect.get(target, prop, receiver);
                 },
@@ -77,8 +72,7 @@ export class Observer {
 
                 if (hashkeys[prop]) {
                     isValueSetted = setValue();
-                    const propWithPrefix = prefix + (prop as string);
-                    onChange(propWithPrefix, newValue, oldValue);
+                    onChange(prefix + (prop as string), newValue, oldValue);
                     if (prefix) {
                         onChange(`${prefix}update`, { key: prop, value: newValue });
                     }
@@ -87,7 +81,7 @@ export class Observer {
 
                 if (prefix) {
                     isValueSetted = setValue();
-                    if (oldValue != null) {
+                    if (oldValue !== undefined) {
                         if (target.hasOwnProperty(prop)) {
                             onChange(`${prefix}update`, { key: prop, value: newValue });
                         }
