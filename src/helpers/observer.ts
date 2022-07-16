@@ -21,7 +21,7 @@ export class Observer {
                 newValue = newValue || {};
                 const mergedNewValue = merge(oldValue, newValue);
                 for (const valKey in mergedNewValue) {
-                    onChange(`${objectValKeyWithPrefix}${valKey}`, mergedNewValue[valKey], oldValue[valKey]);
+                    onChange(`${objectValKeyWithPrefix}${valKey}`, newValue[valKey], oldValue[valKey]);
                 }
             }
 
