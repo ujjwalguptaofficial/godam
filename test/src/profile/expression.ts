@@ -1,4 +1,4 @@
-import { Expression, Computed } from "godam";
+import { Expression, computed } from "godam";
 import { profile } from "./state";
 
 export class ProfileExpression extends Expression<typeof profile> {
@@ -20,12 +20,12 @@ export class ProfileExpression extends Expression<typeof profile> {
             this.get("lastName");
     }
 
-    @Computed("firstName", "lastName")
+    @computed("firstName", "lastName")
     get nameWithText() {
         return `My name is ${this.get("firstName")} ${this.get("lastName")}`;
     }
 
-    // @Computed("address")
+    // @computed("address")
     get address() {
         ++this.addressTextCounter_;
         return `My address is ${this.get("address")}`;

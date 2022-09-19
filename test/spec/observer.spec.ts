@@ -29,28 +29,36 @@ describe('Observer', () => {
         }
         let index = 0;
         const observer = new Observer((key, newValue, oldValue) => {
-            if (index == 0) {
-                expect(key).equal('details.detail1');
-                expect(newValue).to.be.undefined;
-                expect(oldValue).equal('detail1Value');
+            switch (index) {
+                case 0:
+                    expect(key).equal('details.detail1');
+                    expect(newValue).to.be.undefined;
+                    expect(oldValue).equal('detail1Value');
+                    break;
+                case 1:
+
+                    expect(key).equal('details.detail2');
+                    expect(newValue).equal('detail2Value');
+                    expect(oldValue).to.be.undefined;
+
+                    break;
+                case 2:
+                    expect(key).equal('details');
+                    expect(newValue).to.eql({
+                        detail2: 'detail2Value'
+                    })
+                    expect(oldValue).eql({
+                        detail1: 'detail1Value'
+                    });
+
+
+                    observer.destroy();
+                    expect(observer.onChange).to.be.null;
+                    done();
             }
-            else {
-                expect(key).equal('details.detail2');
-                expect(newValue).equal('detail2Value');
-                expect(oldValue).to.be.undefined;
-                observer.destroy();
-                expect(observer.onChange).to.be.null;
-                done();
-            }
+
             index++;
 
-            // expect(key).equal('detail1');
-            // expect(newValue).equal({
-            //     detail2: 'detail2'
-            // });
-            // expect(oldValue).equal({
-            //     detail1: 'detail1'
-            // });
             // console.log('key', key);
             // console.log('newvalue', newValue);
             // console.log('oldValue', oldValue);

@@ -1,12 +1,12 @@
-import { clone, Computed, Expression, Room } from "godam";
+import { clone, computed, Expression, Room } from "godam";
 
 class VeggieExpression extends Expression {
-    @Computed('items')
+    @computed('items')
     get veggieLength() {
         return Object.keys(this.get('items')).length;
     }
 
-    @Computed('items')
+    @computed('items')
     get veggieArray() {
         return Object.values(this.get('items'));
     }

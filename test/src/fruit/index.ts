@@ -1,7 +1,7 @@
-import { clone, Computed, Expression, Room } from "godam";
+import { clone, computed, Expression, Room } from "godam";
 
 class FruitExpression extends Expression {
-    @Computed('items')
+    @computed('items')
     get fruitsLength() {
         return this.get('items').length;
     }

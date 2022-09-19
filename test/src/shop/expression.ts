@@ -1,14 +1,14 @@
-import { Expression, Computed } from "godam";
+import { Expression, computed } from "godam";
 import { ShopState } from "./state";
 
 export class ShopExpression extends Expression<ShopState> {
 
-    @Computed('products')
+    @computed('products')
     get productsCount() {
         return this.get('products').length;
     }
 
-    @Computed('products')
+    @computed('products')
     get lastProduct() {
         const products = this.get('products');
         return products[products.length - 1];
