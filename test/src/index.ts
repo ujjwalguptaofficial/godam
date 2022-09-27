@@ -18,9 +18,8 @@ export const store = new Godam<RootState, RootMutation, RootExpression, RootTask
     state: RootState,
     mutation: RootMutation,
     task: RootTask,
-    expression: RootExpression
-},
-    rooms
-)
+    expression: RootExpression,
+    rooms: rooms
+});
 // store.module.account.STATE.id
 //store.module.account.state(store.module.profile.STATE.firstName)

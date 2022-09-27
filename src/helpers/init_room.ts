@@ -1,9 +1,10 @@
 import { Room, Mutation } from "../abstracts";
-import { IStore } from "../store";
+import { IRoomStore } from "../interfaces";
 import { isArray, isObject } from "../utils";
 import { EventBus } from "./event_bus";
 import { Observer } from "./observer";
-export function initRoom(this: Room, store: IStore, onWatchBusInit: Function) {
+
+export function initRoom(this: Room, store: IRoomStore, onWatchBusInit: Function) {
 
     this['__state__'] = typeof store.state === 'function' ? new store.state() : store.state;
 

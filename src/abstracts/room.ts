@@ -1,5 +1,4 @@
-import { IGodamRoom } from "../interfaces";
-import { IStore } from "../store";
+import { IGodamRoom, IRoomStore } from "../interfaces";
 import { Mutation } from "./mutation";
 import { Task } from "./task_list";
 import { Observer, EventBus } from "../helpers";
@@ -17,9 +16,9 @@ export class Room<T_STATE = {}, T_MUTATION = {}, T_EXPRESSION = {}, T_TASK = {}>
 
     private __watchBus__: EventBus;
 
-    private __private__: { store: IStore } = {} as any;
+    private __private__: { store: IRoomStore } = {} as any;
 
-    constructor(store: IStore) {
+    constructor(store: IRoomStore) {
         this.__private__.store = store;
     }
 

@@ -1,16 +1,9 @@
-import { Mutation, Task, Expression, Room } from "./abstracts";
+import { Mutation, Task, Room } from "./abstracts";
 import { EventBus, initRoom } from "./helpers";
-import { IGodamRoom } from "./interfaces";
+import { IGodamRoom, IGodamStore } from "./interfaces";
 import { getNameAndModule, clone } from "./utils";
 import { Observer, } from "./helpers";
 
-export interface IStore {
-    state: any;
-    mutation?: typeof Mutation | {};
-    expression?: typeof Expression | {};
-    task?: typeof Task | {};
-    track?: boolean;
-}
 
 export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T_MODULE = {}> implements IGodamRoom {
 
@@ -27,14 +20,14 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
 
     shouldCallExpression = true;
 
-    constructor(store: IStore, rooms?: { [key: string]: Room }) {
+    constructor(store: IGodamStore) {
         if (this.track == null) {
             this.track = Godam.track;
         }
 
         initRoom.call(this, store);
 
-        rooms = rooms as any || {};
+        let rooms = store.rooms as any || {};
         rooms = typeof rooms === "function" ? new (rooms as any)() : rooms;
         this.rooms = rooms as any;
         for (const key in rooms) {
