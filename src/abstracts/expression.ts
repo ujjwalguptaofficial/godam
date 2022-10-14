@@ -9,9 +9,9 @@ export class Expression<T_STATE = void> {
         computed(...dependencies)(this, methodName, descriptor);
     }
 
-    protected get(name: keyof T_STATE, moduleName?: string): any;
-    protected get(name: string, moduleName?: string): any;
-    protected get(name: any, moduleName?: string): any {
+    protected get<T>(name: keyof T_STATE, moduleName?: string): T | any;
+    protected get<T>(name: string, moduleName?: string): T | any;
+    protected get<T>(name: any, moduleName?: string): T | any {
     }
 
 }

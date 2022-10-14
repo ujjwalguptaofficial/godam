@@ -3,7 +3,7 @@ import { clone, computed, Expression, Room } from "godam";
 class FruitExpression extends Expression {
     @computed('items')
     get fruitsLength() {
-        return this.get('items').length;
+        return this.get<any[]>('items').length;
     }
 }
 export default new Room({

@@ -2,9 +2,7 @@ import { profile } from "./state";
 import { Mutation } from "godam";
 
 export class ProfileMutation extends Mutation<typeof profile> {
-    setFirstName(value) {
-        this.state.firstName = value;
-    }
+    setFirstName = this.createMutation('firstName');
     setLastName(value) {
         this.state.lastName = value;
     }

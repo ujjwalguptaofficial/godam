@@ -47,6 +47,7 @@ export class Room<T_STATE = {}, T_MUTATION = {}, T_EXPRESSION = {}, T_TASK = {}>
         const result = this.__watchBus__.emitSync("get", this.__getNameWithRoom__(name));
         return result[0];
     }
+    
     eval(name: keyof T_EXPRESSION, payload?: any)
     eval(name: string, payload?: any)
     eval(name: any, payload?: any) {
