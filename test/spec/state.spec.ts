@@ -22,4 +22,22 @@ describe("State value", () => {
         ).equal("Gupta");
 
     })
+
+    it('call invalid state', () => {
+        try {
+            store.get("invalidState");
+            throw new Error("Should have been error")
+        } catch (error) {
+            expect(error).equal(`No state exist with name invalidState`);
+        }
+    })
+
+    it('call invalid state with module', () => {
+        try {
+            store.get("invalidState@profile");
+            throw new Error("Should have been error")
+        } catch (error) {
+            expect(error).equal(`No state exist with name invalidState & module profile`);
+        }
+    })
 })

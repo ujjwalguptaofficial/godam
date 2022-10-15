@@ -90,7 +90,7 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
         if (stateName in ctx) {
             return ctx[stateName];
         }
-        return console.error(`No state exist with name ${stateName} ${moduleName ? "" : "& module " + moduleName}`);
+        throw `No state exist with name ${stateName} ${moduleName ? "& module " + moduleName : ""}`.trim();
     }
 
     eval(expressionName: keyof T_DERIVED, payload?)

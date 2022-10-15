@@ -101,7 +101,7 @@ describe("Expression value", () => {
         }
     })
 
-    it('call invalid task with module', () => {
+    it('call invalid expression with module', () => {
         try {
             store.eval("invalidExpression@profile");
             throw new Error("Should have been error")
