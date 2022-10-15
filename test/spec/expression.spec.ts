@@ -20,7 +20,7 @@ describe("Expression value", () => {
     });
 
     it("computed without get expression", () => {
-        expect(store.eval("errorWithoutGet")).equal('computed method should be get only');
+        expect(store.eval("errorWithoutGet")).equal('network issue');
     });
 
 
