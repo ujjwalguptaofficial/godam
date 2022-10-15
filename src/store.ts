@@ -18,6 +18,7 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
 
     track: boolean;
 
+    // this is useful when user wants to get the method and then call it later
     shouldCallExpression = true;
 
     constructor(store: IGodamStore) {
@@ -100,18 +101,20 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
         const room = this.__getRoom__(moduleName);
         const expression = room['__expression__'];
 
-        // const ctx = this.__getCtx__("__expression__", moduleName);
         if (name in expression) {
-            const value = room['__computed__'][name] || expression[name];
-            if (value && value.call) {
-                if (this.shouldCallExpression) {
-                    return value.call(expression, payload);
+            const computedVal = room['__computed__'][name];
+            // computed does not exist
+            if (typeof computedVal === 'undefined') {
+                const value = expression[name]
+                if (value && value.call) {
+                    return this.shouldCallExpression ? value.call(expression, payload) :
+                        value.bind(expression);
                 }
-                else {
-                    return value.bind(expression);
-                }
+                return value;
             }
-            return value;
+            else { // computed exist
+                return computedVal;
+            }
         }
         throw `No expression exist with name ${name} ${moduleName ? "& module " + moduleName : ""}`.trim();
     }

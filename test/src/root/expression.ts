@@ -21,4 +21,9 @@ export class RootExpression extends Expression<RootState> {
         payload.fruit = "mango";
         return payload;
     }
+
+    @computed("errMessage")
+    isError() {
+        return this.get("errMessage") != null;
+    }
 }

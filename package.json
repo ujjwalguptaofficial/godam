@@ -1,9 +1,16 @@
 {
   "name": "godam",
-  "version": "1.2.4",
+  "version": "1.2.6",
   "description": "Modular & reactive state management framework",
   "main": "dist/npm.export.js",
   "types": "dist/ts/index.d.ts",
+  "keywords": [
+    "store",
+    "generic",
+    "mahal",
+    "react",
+    "vue"
+  ],
   "scripts": {
     "build": "npm run webpack:dev",
     "build:pack": "npm run build && npm pack",

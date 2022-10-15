@@ -6,6 +6,8 @@ describe("Expression value", () => {
 
     it("check root expression", () => {
         expect(store.eval("rootError")).equal(null);
+        expect(store.eval("isError")).equal(false);
+
         const valueToSet = "network issue"
         return new Promise<void>((res) => {
             // expect(store.eval("rootError")).equal(null);
@@ -13,7 +15,10 @@ describe("Expression value", () => {
                 expect(newValue).equal(valueToSet);
                 expect(oldValue).equal(null);
                 expect(store.eval("rootError")).equal(valueToSet);
-                res();
+                setTimeout(() => {
+                    expect(store.eval("isError")).equal(true);
+                    res();
+                }, 100);
             })
             store.set("errMessage", valueToSet);
         });
