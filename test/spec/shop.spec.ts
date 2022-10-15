@@ -52,22 +52,22 @@ describe("Shop", () => {
         });
     });
 
-    it("check for reference", () => {
-        const value = {
-            id: 1,
-            name: 'Jeans',
-            category: 'cloth',
-            total: 50,
-            price: 1000
-        };
-        store.set("addProduct@shop", value);
-        let valueFromStore = store.eval('lastProduct@shop');
-        expect(valueFromStore).deep.equal(value);
-        value['key'] = 'ujjwal';
-        valueFromStore = store.eval('lastProduct@shop');
-        expect(valueFromStore).to.not.haveOwnProperty('key', 'ujjwal');
-        store.set("removeLastProduct@shop");
-    })
+    // it("check for reference", () => {
+    //     const value = {
+    //         id: 1,
+    //         name: 'Jeans',
+    //         category: 'cloth',
+    //         total: 50,
+    //         price: 1000
+    //     };
+    //     store.set("addProduct@shop", value);
+    //     let valueFromStore = store.eval('lastProduct@shop');
+    //     expect(valueFromStore).deep.equal(value);
+    //     value['key'] = 'ujjwal';
+    //     valueFromStore = store.eval('lastProduct@shop');
+    //     expect(valueFromStore).to.not.haveOwnProperty('key', 'ujjwal');
+    //     store.set("removeLastProduct@shop");
+    // })
 
     it("rm last products", () => {
         expect(store.eval("productsCount@shop")).equal(1);

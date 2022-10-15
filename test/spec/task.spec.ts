@@ -52,12 +52,32 @@ describe("Task value", () => {
         }
     })
 
-    it('mutatePayload', () => {
-        const payload = {
-            name: 'ujjwal'
+    // it('mutatePayload', () => {
+    //     const payload = {
+    //         name: 'ujjwal'
+    //     }
+    //     const result = store.do('mutatePayload', payload);
+    //     expect(Object.keys(payload)).deep.equal(['name']);
+    //     expect(Object.keys(result)).deep.equal(['name', 'fruit']);
+    // })
+
+    it("check for payload methods", () => {
+
+        class Temp {
+            name = 'ujjwal';
+            getName = function () {
+                return this.name;
+            }
+
+            protoMethod() {
+                return 'protoMethod';
+            }
         }
+
+        const payload = new Temp();
+
         const result = store.do('mutatePayload', payload);
-        expect(Object.keys(payload)).deep.equal(['name']);
-        expect(Object.keys(result)).deep.equal(['name', 'fruit']);
+        expect(payload.getName()).equal(result.getName());
+        expect(payload.protoMethod()).equal(result.protoMethod());
     })
 })

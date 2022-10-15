@@ -83,14 +83,14 @@ describe("Expression value", () => {
         store.shouldCallExpression = true;
     })
 
-    it('mutatePayload', () => {
-        const payload = {
-            name: 'ujjwal'
-        }
-        const result = store.eval('withObjectPayload', payload);
-        expect(Object.keys(payload)).deep.equal(['name']);
-        expect(Object.keys(result)).deep.equal(['name', 'fruit']);
-    })
+    // it('mutatePayload', () => {
+    //     const payload = {
+    //         name: 'ujjwal'
+    //     }
+    //     const result = store.eval('withObjectPayload', payload);
+    //     expect(Object.keys(payload)).deep.equal(['name']);
+    //     expect(Object.keys(result)).deep.equal(['name', 'fruit']);
+    // })
 
     it('call invalid expression', () => {
         try {

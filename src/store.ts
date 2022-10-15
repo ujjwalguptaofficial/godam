@@ -1,7 +1,7 @@
 import { Mutation, Task, Room } from "./abstracts";
 import { EventBus, initRoom } from "./helpers";
 import { IGodamRoom, IGodamStore } from "./interfaces";
-import { getNameAndModule, clone } from "./utils";
+import { getNameAndModule } from "./utils";
 import { Observer, } from "./helpers";
 
 
@@ -63,7 +63,7 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
         if (!task) {
             throw `No task exist with name ${name} ${moduleName ? "& module " + moduleName : ""}`.trim();
         }
-        return task.call(ctx, clone(payload));
+        return task.call(ctx, payload);
     }
 
     set(mutationName: keyof T_MUTATION, payload?: any): void;
@@ -75,7 +75,7 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
         if (!mutation) {
             throw `No mutation exist with name ${name} ${moduleName ? "& module " + moduleName : ""}`.trim();
         }
-        mutation.call(ctx, clone(payload));
+        mutation.call(ctx, payload);
     }
 
     get(name: keyof T_STATE, moduleName?: string): any;
@@ -105,7 +105,7 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
             const value = room['__computed__'][name] || expression[name];
             if (value && value.call) {
                 if (this.shouldCallExpression) {
-                    return value.call(expression, clone(payload));
+                    return value.call(expression, payload);
                 }
                 else {
                     return value.bind(expression);
