@@ -5,7 +5,7 @@ import { getNameAndModule } from "./utils";
 import { Observer, } from "./helpers";
 
 
-export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T_MODULE = {}> implements IGodamRoom {
+export class Godam<T_STATE = any, T_MUTATION = any, T_EXPRESSION = any, T_TASK = any, T_ROOM = any> implements IGodamRoom {
 
     private __state__: { [key: string]: any };
     private __mutation__: Mutation;
@@ -14,7 +14,7 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
     private __ob__: Observer;
     private __watchBus__: EventBus;
 
-    rooms: { [P in keyof T_MODULE]-?: T_MODULE[P]; };
+    rooms: { [P in keyof T_ROOM]-?: T_ROOM[P]; };
 
     track: boolean;
 
@@ -94,7 +94,7 @@ export class Godam<T_STATE = {}, T_MUTATION = {}, T_DERIVED = {}, T_TASK = {}, T
         throw `No state exist with name ${stateName} ${moduleName ? "& module " + moduleName : ""}`.trim();
     }
 
-    eval(expressionName: keyof T_DERIVED, payload?)
+    eval(expressionName: keyof T_EXPRESSION, payload?)
     eval(expressionName: string, payload?)
     eval(expressionName: any, payload?) {
         let { name, moduleName } = getNameAndModule(expressionName);

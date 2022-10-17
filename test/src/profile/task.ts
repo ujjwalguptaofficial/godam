@@ -10,5 +10,10 @@ export class ProfileTask extends Task<ProfileTask, ProfileMutation, ProfileExpre
         this.set("saveCache@root", "save_profile");
         const fullName = this.eval("fullName");
         assert(fullName === `${firstName}${lastName}`, "fullName expression not as expected")
+
+        // get from other room
+
+        const fruit = this.get('initialFruits', 'fruit');
+        assert(fruit.length === 4, 'invalid fruits length')
     }
 }

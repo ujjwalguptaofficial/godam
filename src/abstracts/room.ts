@@ -22,9 +22,9 @@ export class Room<T_STATE = {}, T_MUTATION = {}, T_EXPRESSION = {}, T_TASK = {}>
         this.__private__.store = store;
     }
 
-    __getNameWithRoom__(name: string) {
+    __getNameWithRoom__(name: string, roomName?: string) {
         return name.includes("@") ? name :
-            name + "@" + this.__prefix__;
+            name + "@" + (roomName || this.__prefix__);
     }
 
     do(taskName: keyof T_TASK, payload?: any);
@@ -43,11 +43,11 @@ export class Room<T_STATE = {}, T_MUTATION = {}, T_EXPRESSION = {}, T_TASK = {}>
 
     get(name: keyof T_STATE): any;
     get(name: string): any;
-    get(name: any) {
-        const result = this.__watchBus__.emitSync("get", this.__getNameWithRoom__(name));
+    get(name: any, roomName?: string) {
+        const result = this.__watchBus__.emitSync("get", this.__getNameWithRoom__(name, roomName));
         return result[0];
     }
-    
+
     eval(name: keyof T_EXPRESSION, payload?: any)
     eval(name: string, payload?: any)
     eval(name: any, payload?: any) {
