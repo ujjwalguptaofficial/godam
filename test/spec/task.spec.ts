@@ -11,6 +11,12 @@ describe("Task value", () => {
         expect(store.get("errMessage")).equal(null);
     })
 
+    it('initApp', () => {
+        expect(store.get("isAccountInitialized", 'account')).equal(false);
+        store.do('initApp');
+        expect(store.get("isAccountInitialized", 'account')).equal(true);
+    })
+
     it("call getConfig", () => {
         store.do("getConfig");
         expect(store.get("isAuthenticated")).equal(undefined);

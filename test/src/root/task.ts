@@ -15,4 +15,8 @@ export class RootTask extends Task<RootState, RootMutation> {
         payload.fruit = "mango";
         return payload;
     }
+
+    initApp() {
+        this.do("initAccount@account");
+    }
 }

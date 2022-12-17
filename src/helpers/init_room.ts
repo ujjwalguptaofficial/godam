@@ -28,7 +28,7 @@ export function initRoom(this: Room, store: IRoomStore, onWatchBusInit: Function
         get: get,
         set: this.set.bind(this),
         eval: this.eval.bind(this),
-        do: this.do,
+        do: this.do.bind(this),
     })
 
     this['__watchBus__'] = new EventBus(this);
